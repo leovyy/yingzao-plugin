@@ -59,12 +59,10 @@ function Setup-Settings {
 }
 function Setup-Tools {
  $input=@{type='object';properties=@{};additionalProperties=$false}
- return @(
-  @{name='plugin_settings_read';title='读取映造设置';inputSchema=$input;annotations=@{readOnlyHint=$true};outputSchema=@{type='object';properties=@{schema=@{type='object'};values=@{type='object'};layout=@{type='array';items=@{type='object'}}};required=@('schema','values')};_meta=@{ui=@{visibility=@('app')}}},
-  @{name='plugin_settings_update';title='更新映造设置';inputSchema=@{type='object';properties=@{set=@{type='object'}}};outputSchema=@{type='object';properties=@{values=@{type='object'}};required=@('values')};_meta=@{ui=@{visibility=@('app')}}},
-  @{name='plugin_setup_retry';title='重试安装映造运行时';description='失败时重试下载签名运行时，保留本地资料，不调用模型。';inputSchema=$input;_meta=@{ui=@{visibility=@('app')}}},
-  @{name='plugin_status';title='映造安装状态';description='查看首次安装进度；安装未完成不进行制作。';inputSchema=$input;annotations=@{readOnlyHint=$true}}
- )
+ $catalog=Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PSScriptRoot) 'tool-catalog.json') -Raw -Encoding UTF8|ConvertFrom-Json
+ if($catalog.schema -ne 1 -or @($catalog.tools).Count -ne 29){throw 'Plugin tool metadata invalid.'}
+ $retry=@{name='plugin_setup_retry';title='重试安装映造运行时';description='只重试签名运行时安装，不调用模型。';inputSchema=@{type='object';properties=@{}};_meta=@{ui=@{visibility=@('app')}}}
+ return @($catalog.tools)+@($retry)
 }
 Launch-Installer
 try {
@@ -86,6 +84,7 @@ try {
     $result=@{resultType='complete';supportedVersions=@('2025-11-25','2026-07-28');capabilities=@{tools=@{listChanged=$true};resources=@{};extensions=@{'openai/settings'=$script:capability}};_meta=@{'io.modelcontextprotocol/serverInfo'=@{name='yingzao-production';version=$script:manifest.version}}}
    }else{
     Connect-Runtime
+    if($script:ready -and $method -eq 'tools/call' -and $params.name -eq 'plugin_setup_retry'){Emit @{jsonrpc='2.0';id=$id;result=@{content=@(@{type='text';text='签名运行时已就绪，无需重试。'});structuredContent=@{state='ready';model_calls=0}}};continue}
     if($script:ready){$forward=@{jsonrpc='2.0';id=$id;method=$method};if($null -ne $params){$forward.params=$params};Emit (Child-Rpc $forward);continue}
     switch($method){
      'ping' {$result=@{}}
