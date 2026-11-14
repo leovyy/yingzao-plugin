@@ -1,6 +1,6 @@
 {
   "name": "yingzao",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "启用后默认使用映造内部工作流与审美检索；提供内部API、资产过程和桌面丫鸭。",
   "author": {
     "name": "映造"

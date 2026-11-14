@@ -17,6 +17,10 @@ if(-not $needsRuntime){
  $needsRuntime=([version]$installed.version -lt [version]$manifest.version)
 }
 if($needsRuntime){
+ if($Mode -eq 'mcp'){
+  & (Join-Path $PSScriptRoot 'Serve-Setup.ps1') -HomePath $homePath -DataPath $dataPath
+  exit $LASTEXITCODE
+ }
  & (Join-Path $PSScriptRoot 'Update-Yingzao.ps1') -HomePath $homePath -DataPath $dataPath
 }
 $current=Get-Content -LiteralPath $pointer -Raw -Encoding UTF8|ConvertFrom-Json
