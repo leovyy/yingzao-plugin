@@ -1,0 +1,19 @@
+{
+  "name": "yingzao",
+  "version": "0.6.0",
+  "description": "启用后默认使用映造内部工作流与审美检索；提供内部API、资产过程和桌面丫鸭。",
+  "author": {
+    "name": "映造"
+  },
+  "mcpServers": "./mcp.json",
+  "interface": {
+    "displayName": "映造",
+    "shortDescription": "本机 API 创作与实时工作台",
+    "longDescription": "Codex编排工作流和领域技能，映造管理内部API、审美与资产过程；丫鸭支持拖入喂图和审美库。真实执行、审查与交付分别记录。",
+    "developerName": "映造",
+    "category": "Design",
+    "defaultPrompt": [
+      "用映造制作图片，并打开工作台展示过程。"
+    ]
+  }
+}

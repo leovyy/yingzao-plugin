@@ -1,0 +1,20 @@
+{
+  "name": "yingzao-plugin",
+  "interface": {
+    "displayName": "映造插件市场"
+  },
+  "plugins": [
+    {
+      "name": "yingzao",
+      "source": {
+        "source": "local",
+        "path": "./plugins/yingzao"
+      },
+      "category": "Design",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      }
+    }
+  ]
+}
