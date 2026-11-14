@@ -10,7 +10,8 @@ function Emit($Value){[Console]::Out.WriteLine(($Value|ConvertTo-Json -Depth 80 
 function Launch-Installer {
  if($script:installer -and -not $script:installer.HasExited){return}
  $args=@('-NoLogo','-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',('"'+(Join-Path $PSScriptRoot 'Install-Runtime.ps1')+'"'),'-HomePath',('"'+$HomePath+'"'),'-DataPath',('"'+$DataPath+'"'))
- $script:installer=Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -ArgumentList $args -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $HomePath 'bootstrap-install.log') -RedirectStandardError (Join-Path $HomePath 'bootstrap-install.error.log')
+ $empty=Join-Path $HomePath 'bootstrap-empty-input.txt';[IO.File]::WriteAllBytes($empty,[byte[]]@())
+ $script:installer=Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -ArgumentList $args -WindowStyle Hidden -PassThru -RedirectStandardInput $empty -RedirectStandardOutput (Join-Path $HomePath 'bootstrap-install.log') -RedirectStandardError (Join-Path $HomePath 'bootstrap-install.error.log')
 }
 function Runtime-Path {
  try {

@@ -81,8 +81,16 @@ try {
   if(-not $file.StartsWith($stage+'\',[StringComparison]::OrdinalIgnoreCase) -or (Get-Item -LiteralPath $file).Length -ne $row.bytes -or (Hash-File $file) -ne $row.sha256){throw 'Manifest path or hash mismatch.'}
  }
  $exe=Join-Path $stage 'runtime\Yingzao.exe'
- $self=& $exe '--runtime-self-check'
- if($LASTEXITCODE -ne 0 -or ($self|ConvertFrom-Json).version -ne $asset.version){throw 'Runtime self-check failed; previous version retained.'}
+ # A background installation must never inherit the host MCP input pipe.
+ $start=New-Object Diagnostics.ProcessStartInfo
+ $start.FileName=$exe;$start.Arguments='--runtime-self-check';$start.UseShellExecute=$false;$start.CreateNoWindow=$true
+ $start.RedirectStandardInput=$true;$start.RedirectStandardOutput=$true;$start.StandardOutputEncoding=New-Object Text.UTF8Encoding($false)
+ $probe=New-Object Diagnostics.Process;$probe.StartInfo=$start
+ try {
+  $null=$probe.Start();$probe.StandardInput.Close();$output=$probe.StandardOutput.ReadToEndAsync()
+  if(-not $probe.WaitForExit(30000)){$probe.Kill();throw 'Runtime self-check timed out; previous version retained.'}
+  if($probe.ExitCode -ne 0 -or ($output.Result|ConvertFrom-Json).version -ne $asset.version){throw 'Runtime self-check failed; previous version retained.'}
+ }finally{$probe.Dispose()}
  $destination=Join-Path $versions $asset.version
  if(Test-Path -LiteralPath $destination){throw 'Version directory already exists; verify it before retrying.'}
  Write-Atomic (Join-Path $stage 'installed-release.json') $asset
