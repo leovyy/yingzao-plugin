@@ -10,7 +10,13 @@ if(Test-Path -LiteralPath $registry){
  if($saved.data_root -and [IO.Path]::IsPathRooted($saved.data_root)){$dataPath=[IO.Path]::GetFullPath($saved.data_root)}
 }
 $pointer=Join-Path $homePath 'current.json'
-if(-not(Test-Path -LiteralPath $pointer)){
+$manifest=Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PSScriptRoot) '.codex-plugin\plugin.json') -Raw -Encoding UTF8|ConvertFrom-Json
+$needsRuntime=-not(Test-Path -LiteralPath $pointer)
+if(-not $needsRuntime){
+ $installed=Get-Content -LiteralPath $pointer -Raw -Encoding UTF8|ConvertFrom-Json
+ $needsRuntime=([version]$installed.version -lt [version]$manifest.version)
+}
+if($needsRuntime){
  & (Join-Path $PSScriptRoot 'Update-Yingzao.ps1') -HomePath $homePath -DataPath $dataPath
 }
 $current=Get-Content -LiteralPath $pointer -Raw -Encoding UTF8|ConvertFrom-Json
