@@ -60,7 +60,7 @@ function Setup-Settings {
 function Setup-Tools {
  $input=@{type='object';properties=@{};additionalProperties=$false}
  $catalog=Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PSScriptRoot) 'tool-catalog.json') -Raw -Encoding UTF8|ConvertFrom-Json
- if($catalog.schema -ne 1 -or @($catalog.tools).Count -ne 29){throw 'Plugin tool metadata invalid.'}
+ if($catalog.schema -ne 1 -or @($catalog.tools).Count -ne 30){throw 'Plugin tool metadata invalid.'}
  $retry=@{name='plugin_setup_retry';title='重试安装映造运行时';description='只重试签名运行时安装，不调用模型。';inputSchema=@{type='object';properties=@{}};_meta=@{ui=@{visibility=@('app')}}}
  return @($catalog.tools)+@($retry)
 }

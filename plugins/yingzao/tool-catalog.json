@@ -59,7 +59,7 @@
               "use_internal_api": {
                 "type": "boolean",
                 "title": "使用映造内部 API",
-                "description": "独立控制内部模型调用权限；关闭仍可查库，不自动切换收费服务。"
+                "description": "仅选择内部模型服务；默认关闭。关闭不影响宿主Agent制作、识别、检索或代码工作。宿主明确缺少所需生图能力时才检查已授权内部服务，不因超时擅自切换。"
               },
               "desktop_visible": {
                 "type": "boolean",
@@ -94,6 +94,13 @@
                 "type": "boolean",
                 "title": "喂图后自动分析",
                 "description": "默认由 Codex Agent 看图提炼；结果只写入本地库，不推定喜欢。"
+              },
+              "desktop_analysis_concurrency": {
+                "type": "integer",
+                "title": "不同图片同时分析数",
+                "minimum": 1,
+                "maximum": 8,
+                "description": "默认3；同图只发一次，未知结果单独隔离，不阻塞其他图片。"
               },
               "desktop_analysis_backend": {
                 "type": "string",
@@ -143,7 +150,7 @@
     },
     {
       "name": "plugin_use_internal_api",
-      "description": "使用映造内部 API；未配置自动打开本机 API 配置，不发送模型请求。",
+      "description": "仅用户明确选择时全局启用内部API；宿主缺少生图能力使用plugin_create的任务级能力证据回退，不调用本工具改变默认开关。未配置打开本机配置，不发送模型请求。",
       "inputSchema": {
         "type": "object",
         "properties": {},
@@ -184,7 +191,7 @@
     },
     {
       "name": "plugin_aesthetics",
-      "description": "插件审美库：包体只读库与插件本地案例联合检索、原图、分析和明确反馈；list/detail/recall不调用模型，recover仅恢复安装旁遗留媒体为偏好未知、未分析。不得把无元数据恢复说成原偏好恢复；不上传云库。",
+      "description": "插件审美库：包体只读库与插件本地案例联合检索、原图、分析和明确反馈；reanalyze按明确source_id安排本地与包体新版重分析，保留旧分析与偏好，reanalysis_status查看回执；list/detail/recall不调用模型，recover仅恢复安装旁遗留媒体为偏好未知、未分析。不得把无元数据恢复说成原偏好恢复；不上传云库。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -194,6 +201,12 @@
               "detail",
               "recall",
               "recover",
+              "reanalyze",
+              "reanalysis_status",
+              "reanalysis_resume",
+              "reanalysis_reconcile",
+              "reanalysis_inspect",
+              "reanalysis_commit_host",
               "prepare_extraction",
               "commit_extraction",
               "feedback",
@@ -274,7 +287,8 @@
         },
         "required": [],
         "additionalProperties": false
-      }
+      },
+      "title": "映造 · 审美库与原图参考"
     },
     {
       "name": "plugin_desktop",
@@ -336,7 +350,8 @@
         },
         "required": [],
         "additionalProperties": false
-      }
+      },
+      "title": "映造 · 插件更新与回退"
     },
     {
       "name": "plugin_memory",
@@ -396,7 +411,76 @@
         },
         "required": [],
         "additionalProperties": false
-      }
+      },
+      "title": "映造 · 本地工作记忆"
+    },
+    {
+      "name": "plugin_request",
+      "description": "按需记录复杂任务需求核对与资料来源；普通问答不强制建档或展示提示词。生图提示词用plugin_external_step(action=prompt)绑定实际工具参数。audit仅核对已记录任务，不证明隐藏思维深度，不调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "begin",
+              "optimize",
+              "evidence",
+              "get",
+              "audit"
+            ]
+          },
+          "ident": {
+            "type": "string"
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "turn_id": {
+            "type": "string"
+          },
+          "agent_id": {
+            "type": "string"
+          },
+          "requirement": {
+            "type": "string"
+          },
+          "optimized_prompt": {
+            "type": "string"
+          },
+          "research": {
+            "type": "object"
+          },
+          "category": {
+            "enum": [
+              "project_rules",
+              "skills",
+              "source",
+              "memory",
+              "aesthetics",
+              "web"
+            ]
+          },
+          "location": {
+            "type": "string"
+          },
+          "finding": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "outcome": {
+            "enum": [
+              "read",
+              "no_results",
+              "unavailable"
+            ]
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "title": "映造正在使用中 · 需求与检索核验"
     },
     {
       "name": "plugin_workflow",
@@ -411,8 +495,15 @@
               "get",
               "design",
               "guide",
-              "audit_script"
+              "audit_script",
+              "reference_read",
+              "reference_bind",
+              "reference_inspect",
+              "bind"
             ]
+          },
+          "reference": {
+            "type": "object"
           },
           "stage": {
             "enum": [
@@ -464,17 +555,19 @@
             "enum": [
               "completed",
               "no_results",
-              "unavailable"
+              "unavailable",
+              "not_required"
             ]
           }
         },
         "required": [],
         "additionalProperties": false
-      }
+      },
+      "title": "映造正在使用中 · 工作流与审美检索"
     },
     {
       "name": "plugin_external_step",
-      "description": "Codex外部工序的事务领取、场景单写、真实进度、原ID回写与智能体审查；租约失效先核对，不重复应用操作。",
+      "description": "Codex外部工序：生图前prompt提交当前Agent优化的绘图说明、实际target_tool及tool_arguments；按返回参数执行，submit提供原request_id、tool_arguments及prompt_sha256，不以提示词展示代替实际传参。默认30分钟租约，长工具可预设lease_seconds并heartbeat续租（不是制作进度）。过期先get查看recovery_contract；reconcile按not_started/checkpoint/running提供原执行证据，不能虚构检查点。同一写入者的真实晚到产物可直接submit；不重复应用或模型调用。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -485,6 +578,8 @@
             "enum": [
               "create",
               "claim",
+              "prompt",
+              "heartbeat",
               "progress",
               "submit",
               "reconcile",
@@ -492,8 +587,23 @@
               "get"
             ]
           },
+          "lease_seconds": {
+            "type": "integer",
+            "minimum": 120,
+            "maximum": 7200,
+            "description": "原写入者的租约时长；默认1800，长工具调用前按真实耗时延长。"
+          },
           "step_id": {
             "type": "string"
+          },
+          "optimized_prompt": {
+            "type": "string"
+          },
+          "target_tool": {
+            "type": "string"
+          },
+          "tool_arguments": {
+            "type": "object"
           },
           "asset_id": {
             "type": "string"
@@ -535,7 +645,60 @@
             "type": "object"
           },
           "evidence": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+              "execution_state": {
+                "enum": [
+                  "not_started",
+                  "checkpoint",
+                  "running"
+                ]
+              },
+              "operation_id": {
+                "type": "string"
+              },
+              "observation": {
+                "type": "string",
+                "description": "实际核对原工具、原请求和产物所见，不能照抄示例冒充检查。"
+              },
+              "outcome": {
+                "enum": [
+                  "not_sent"
+                ]
+              },
+              "checkpoint_path": {
+                "type": "string",
+                "description": "实际检查点文件的绝对路径，仅checkpoint模式使用。"
+              },
+              "checkpoint_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "tool_receipt": {
+                "type": "object",
+                "properties": {
+                  "application": {
+                    "type": "string"
+                  },
+                  "operation_id": {
+                    "type": "string"
+                  },
+                  "request_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "application",
+                  "operation_id",
+                  "request_id"
+                ]
+              }
+            },
+            "required": [
+              "execution_state",
+              "operation_id",
+              "observation"
+            ]
           },
           "candidate_id": {
             "type": "string"
@@ -553,7 +716,8 @@
           "step_id"
         ],
         "additionalProperties": false
-      }
+      },
+      "title": "映造 · 外部工序与恢复"
     },
     {
       "name": "plugin_select_delivery",
@@ -687,7 +851,7 @@
     },
     {
       "name": "plugin_create",
-      "description": "启用后制作图片、模型或特效，使用映造内部API，派发前打开工作台；无需connect。独立任务可并发；相同request_id只查原回执。模型/特效仍检查真实适配器与版本绑定的设计确认。",
+      "description": "默认由宿主Agent制作，内部API关闭或未配置不影响正常工具和代码工作。settings.execution_backend=host_session可明确使用宿主；不需要生图时requires_image_generation=false。只有手动选择内部API或确证宿主缺少生图能力才检查内部服务；后者须提供settings.host_image_capability={capability:image_generation,status:unsupported,checked_tools:实际工具列表,observation:实际证据}，仅授权当前任务，不改默认开关。映造统一制作入口，无需connect：内部API关闭时仍登记工作流、审美与参考，交给当前宿主实际执行；开启且配置后才用内部服务。相同request_id只核对原回执，不重发未知请求。与plugin_workflow及plugin_external_step形成准备、执行、回写、自审全链路。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -760,7 +924,8 @@
           "request_id"
         ],
         "additionalProperties": false
-      }
+      },
+      "title": "映造 · 登记制作任务"
     },
     {
       "name": "plugin_task",
@@ -776,7 +941,8 @@
           "project_id"
         ],
         "additionalProperties": false
-      }
+      },
+      "title": "映造 · 读取真实进度"
     },
     {
       "name": "plugin_layout_export",

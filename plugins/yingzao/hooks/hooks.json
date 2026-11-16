@@ -1,0 +1,83 @@
+{
+  "description": "本机消息回执与资料检索核验；不调用模型、不上传；须用户在宿主信任。",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"${PLUGIN_ROOT}/hooks/Request-Hook.ps1\"",
+            "timeout": 15,
+            "statusMessage": "映造 · 加载协作规则",
+            "additionalContextLimit": 2000
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"${PLUGIN_ROOT}/hooks/Request-Hook.ps1\"",
+            "timeout": 15,
+            "statusMessage": "映造 · 记录本条需求",
+            "additionalContextLimit": 2000
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"${PLUGIN_ROOT}/hooks/Request-Hook.ps1\"",
+            "timeout": 15,
+            "statusMessage": "映造 · 传递资料检索规则",
+            "additionalContextLimit": 2000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"${PLUGIN_ROOT}/hooks/Request-Hook.ps1\"",
+            "timeout": 15,
+            "statusMessage": "映造 · 核对实际工具记录",
+            "additionalContextLimit": 2000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"${PLUGIN_ROOT}/hooks/Request-Hook.ps1\"",
+            "timeout": 15,
+            "statusMessage": "映造 · 最终证据自审",
+            "additionalContextLimit": 2000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "mcp__.*yingzao.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"${PLUGIN_ROOT}/hooks/Request-Hook.ps1\"",
+            "timeout": 15,
+            "statusMessage": "映造正在使用中"
+          }
+        ]
+      }
+    ]
+  }
+}
