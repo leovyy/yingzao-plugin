@@ -976,6 +976,68 @@
       }
     },
     {
+      "name": "plugin_mozhou",
+      "description": "墨舟完整界面嵌入与每书本地工作记忆子库，不启动形象；library读取本书子库，link关联本书制作，tasks读取关联任务。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "library",
+              "panel",
+              "link",
+              "tasks",
+              "status",
+              "prepare_art",
+              "complete_art",
+              "connection"
+            ]
+          },
+          "scope": {
+            "type": "string"
+          },
+          "book_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "arguments": {
+            "type": "object"
+          },
+          "source": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "claim_token": {
+            "type": "string"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "tool_receipt": {
+            "type": "object"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
       "name": "plugin_status",
       "description": "读取插件开关与并发设置，不读取密钥、不调用模型；插件入口无需connect。",
       "inputSchema": {
