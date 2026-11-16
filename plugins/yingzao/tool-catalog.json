@@ -654,7 +654,7 @@
     },
     {
       "name": "plugin_workflow",
-      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。search记录宿主联网来源；不调用模型。",
+      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。失败记录不放行制作；不调用模型。",
       "inputSchema": {
         "type": "object",
         "properties": {
