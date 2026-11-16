@@ -1,1 +1,1796 @@
-{"schema": 1, "tools": [{"name": "plugin_settings_read", "description": "\u8bfb\u53d6\u6620\u9020\u539f\u751f\u63d2\u4ef6\u8bbe\u7f6e\u4e0e\u672c\u673a API \u7ba1\u7406\u5165\u53e3\uff1b\u4e0d\u8bfb\u53d6\u5bc6\u94a5\u3001\u4e0d\u8054\u7f51\u3002", "inputSchema": {"type": "object", "properties": {}, "required": [], "additionalProperties": false}, "_meta": {"ui": {"visibility": ["app"]}}, "outputSchema": {"type": "object", "properties": {"values": {"type": "object"}, "schema": {"type": "object"}, "layout": {"type": "array", "items": {"type": "object"}}}, "required": ["values", "schema"]}, "annotations": {"readOnlyHint": true}}, {"name": "plugin_settings_update", "description": "\u4fdd\u5b58\u542f\u7528\u3001\u5185\u90e8 API \u6743\u9650\u3001\u81ea\u52a8\u5206\u6790\u4e0e\u4e2b\u9e2d\u8bbe\u7f6e\uff0c\u4e0d\u63a5\u6536\u5bc6\u94a5\u3002", "inputSchema": {"type": "object", "properties": {"set": {"type": "object", "properties": {"enabled": {"type": "boolean", "title": "\u542f\u7528\u6620\u9020", "description": "\u542f\u7528\u5de5\u4f5c\u6d41\u4e0e\u684c\u9762\u5165\u53e3\uff1b\u5173\u95ed\u4e0d\u53d6\u6d88\u5df2\u63a5\u53d7\u4efb\u52a1\u3002"}, "use_internal_api": {"type": "boolean", "title": "\u4f7f\u7528\u6620\u9020\u5185\u90e8 API", "description": "\u4ec5\u9009\u62e9\u5185\u90e8\u6a21\u578b\u670d\u52a1\uff1b\u9ed8\u8ba4\u5173\u95ed\u3002\u5173\u95ed\u4e0d\u5f71\u54cd\u5bbf\u4e3bAgent\u5236\u4f5c\u3001\u8bc6\u522b\u3001\u68c0\u7d22\u6216\u4ee3\u7801\u5de5\u4f5c\u3002\u5bbf\u4e3b\u660e\u786e\u7f3a\u5c11\u6240\u9700\u751f\u56fe\u80fd\u529b\u65f6\u624d\u68c0\u67e5\u5df2\u6388\u6743\u5185\u90e8\u670d\u52a1\uff0c\u4e0d\u56e0\u8d85\u65f6\u64c5\u81ea\u5207\u6362\u3002"}, "desktop_visible": {"type": "boolean", "title": "\u663e\u793a\u684c\u9762\u4e2b\u9e2d", "description": "\u9690\u85cf\u65f6\u4fdd\u7559\u4f4d\u7f6e\uff1b\u542f\u7528\u6620\u9020\u540e\u751f\u6548\u3002"}, "desktop_size": {"type": "integer", "title": "\u4e2b\u9e2d\u5927\u5c0f\uff08px\uff09", "minimum": 96, "maximum": 320}, "desktop_opacity": {"type": "integer", "title": "\u4e2b\u9e2d\u4e0d\u900f\u660e\u5ea6\uff08%\uff09", "minimum": 30, "maximum": 100}, "desktop_topmost": {"type": "boolean", "title": "\u4fdd\u6301\u7f6e\u9876"}, "desktop_locked": {"type": "boolean", "title": "\u9501\u5b9a\u4e2b\u9e2d\u4f4d\u7f6e"}, "desktop_feed_enabled": {"type": "boolean", "title": "\u5141\u8bb8\u62d6\u5165\u5582\u56fe"}, "desktop_auto_analyze": {"type": "boolean", "title": "\u5582\u56fe\u540e\u81ea\u52a8\u5206\u6790", "description": "\u9ed8\u8ba4\u7531 Codex Agent \u770b\u56fe\u63d0\u70bc\uff1b\u7ed3\u679c\u53ea\u5199\u5165\u672c\u5730\u5e93\uff0c\u4e0d\u63a8\u5b9a\u559c\u6b22\u3002"}, "desktop_analysis_concurrency": {"type": "integer", "title": "\u4e0d\u540c\u56fe\u7247\u540c\u65f6\u5206\u6790\u6570", "minimum": 1, "maximum": 8, "description": "\u9ed8\u8ba43\uff1b\u540c\u56fe\u53ea\u53d1\u4e00\u6b21\uff0c\u672a\u77e5\u7ed3\u679c\u5355\u72ec\u9694\u79bb\uff0c\u4e0d\u963b\u585e\u5176\u4ed6\u56fe\u7247\u3002"}, "desktop_analysis_backend": {"type": "string", "title": "\u81ea\u52a8\u5206\u6790\u6267\u884c\u65b9\u5f0f", "enum": ["codex_agent", "internal_api"], "enumNames": ["Codex Agent\uff08\u9ed8\u8ba4\uff09", "\u6620\u9020\u5185\u90e8 API"], "description": "\u9ed8\u8ba4\u4f7f\u7528\u5f53\u524d Codex\uff1b\u660e\u786e\u9009\u62e9\u5185\u90e8 API \u6216\u5bbf\u4e3b\u786e\u5b9e\u6ca1\u6709\u6240\u9700\u80fd\u529b\u65f6\uff0c\u624d\u4f7f\u7528\u5df2\u5141\u8bb8\u7684\u5185\u90e8\u670d\u52a1\u3002"}, "desktop_open_after_feed": {"type": "boolean", "title": "\u5582\u56fe\u540e\u6253\u5f00\u5ba1\u7f8e\u5e93"}}, "minProperties": 1, "additionalProperties": false}}, "required": ["set"], "additionalProperties": false}, "_meta": {"ui": {"visibility": ["app"]}}, "outputSchema": {"type": "object", "properties": {"values": {"type": "object"}}, "required": ["values"]}}, {"name": "plugin_use_internal_api", "description": "\u4ec5\u7528\u6237\u660e\u786e\u9009\u62e9\u65f6\u5168\u5c40\u542f\u7528\u5185\u90e8API\uff1b\u5bbf\u4e3b\u7f3a\u5c11\u751f\u56fe\u80fd\u529b\u4f7f\u7528plugin_create\u7684\u4efb\u52a1\u7ea7\u80fd\u529b\u8bc1\u636e\u56de\u9000\uff0c\u4e0d\u8c03\u7528\u672c\u5de5\u5177\u6539\u53d8\u9ed8\u8ba4\u5f00\u5173\u3002\u672a\u914d\u7f6e\u6253\u5f00\u672c\u673a\u914d\u7f6e\uff0c\u4e0d\u53d1\u9001\u6a21\u578b\u8bf7\u6c42\u3002", "inputSchema": {"type": "object", "properties": {}, "required": [], "additionalProperties": false}, "title": "\u4f7f\u7528\u6620\u9020\u5185\u90e8 API"}, {"name": "plugin_open", "description": "\u6253\u5f00\u5ba1\u7f8e\u5e93\u4e0e\u96c6\u4e2d\u7ba1\u7406\uff0c\u542b\u56fe\u7247\u504f\u597d\u3001\u8bb0\u5fc6\u3001\u5b89\u5168API\u914d\u7f6e\u3001\u672c\u5730\u8d44\u6599\u4e0e\u66f4\u65b0\uff1b\u5bbf\u4e3b\u652f\u6301\u65f6\u5185\u5d4c\u663e\u793a\uff0c\u5426\u5219\u72ec\u7acb\u672c\u673a\u9875\u9762\u3002\u8bb0\u5fc6\u4e0d\u5728\u5de5\u4f5c\u53f0\u5c55\u793a\uff1b\u4e0d\u8c03\u7528\u6a21\u578b\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}}, "required": [], "additionalProperties": false}, "title": "API\u3001\u8bb0\u5fc6\u3001\u5ba1\u7f8e\u4e0e\u4e2b\u9e2d\u8bbe\u7f6e", "_meta": {"ui": {"resourceUri": "ui://yingzao/plugin.html"}, "openai/ui": {"entrypoints": [{"type": "global"}, {"type": "thread"}]}}}, {"name": "plugin_aesthetics", "description": "\u63d2\u4ef6\u5ba1\u7f8e\u5e93\uff1a\u5305\u4f53\u53ea\u8bfb\u5e93\u4e0e\u63d2\u4ef6\u672c\u5730\u6848\u4f8b\u8054\u5408\u68c0\u7d22\u3001\u539f\u56fe\u3001\u5206\u6790\u548c\u660e\u786e\u53cd\u9988\uff1breanalyze\u6309\u660e\u786esource_id\u5b89\u6392\u672c\u5730\u4e0e\u5305\u4f53\u65b0\u7248\u91cd\u5206\u6790\uff0c\u4fdd\u7559\u65e7\u5206\u6790\u4e0e\u504f\u597d\uff0creanalysis_status\u67e5\u770b\u56de\u6267\uff1blist/detail/recall\u4e0d\u8c03\u7528\u6a21\u578b\uff0crecover\u4ec5\u6062\u590d\u5b89\u88c5\u65c1\u9057\u7559\u5a92\u4f53\u4e3a\u504f\u597d\u672a\u77e5\u3001\u672a\u5206\u6790\u3002\u4e0d\u5f97\u628a\u65e0\u5143\u6570\u636e\u6062\u590d\u8bf4\u6210\u539f\u504f\u597d\u6062\u590d\uff1b\u4e0d\u4e0a\u4f20\u4e91\u5e93\u3002", "inputSchema": {"type": "object", "properties": {"action": {"enum": ["list", "detail", "recall", "recover", "reanalyze", "reanalysis_status", "reanalysis_resume", "reanalysis_reconcile", "reanalysis_inspect", "reanalysis_commit_host", "prepare_extraction", "commit_extraction", "feedback", "like", "dislike", "delete", "feature_choice", "all_features", "all_library"]}, "project_id": {"type": "string"}, "query": {"type": "string"}, "collection": {"type": "string"}, "status": {"enum": ["all", "analyzed", "not_analyzed"]}, "offset": {"type": "integer", "minimum": 0}, "limit": {"type": "integer", "minimum": 1, "maximum": 100}, "ident": {"type": "string"}, "text": {"type": "string"}, "expected_revision": {"type": "integer", "minimum": 0}, "source_id": {"type": "string"}, "job_id": {"type": "string"}, "analysis": {"type": "object"}, "inspection_sha256": {"type": "string"}, "option_id": {"type": "string"}, "choice": {"enum": ["liked", "disliked", null]}, "expected_choice": {"enum": ["liked", "disliked", null]}, "include_images": {"type": "boolean"}}, "required": [], "additionalProperties": false}, "title": "\u6620\u9020 \u00b7 \u5ba1\u7f8e\u5e93\u4e0e\u539f\u56fe\u53c2\u8003"}, {"name": "plugin_model_texture", "description": "\u6620\u9020\u6a21\u578b\u8d34\u56fe\uff1aprepare\u51bb\u7ed3\u89c6\u56fe\u65b9\u6848\uff0cqueue_capture\u91c7\u96c6\u771f\u5b9e\u76f8\u673a\uff0cinputs\u7ed1\u5b9a\u5916\u90e8\u91cd\u7ed8\u8f93\u5165\uff0caccept_view\u6838\u5bf9\u539f\u5de5\u5177\u56de\u6267\uff0cqueue_project\u906e\u7f69\u56de\u6295\uff0cqueue_bake\u4fdd\u5b58\u539f\u751f\u5de5\u7a0b\u4e0e\u53ef\u9009GLB\u3002status\u53ea\u8bfb\uff1b\u961f\u5217\u4e0d\u4ee3\u8868\u6267\u884c\u5b8c\u6210\uff0c\u4e0d\u8c03\u7528\u6a21\u578b\u6216\u5185\u90e8API\uff0c\u4e0d\u91cd\u53d1\u672a\u77e5\u8bf7\u6c42\u3002", "inputSchema": {"type": "object", "properties": {"action": {"enum": ["prepare", "status", "queue_capture", "inputs", "accept_view", "queue_project", "queue_bake"]}, "project_id": {"type": "string"}, "pack_id": {"type": "string"}, "parameters": {"type": "object"}, "operation_id": {"type": "string"}}, "required": ["action", "project_id", "pack_id"], "additionalProperties": false}}, {"name": "plugin_desktop", "description": "\u4e2b\u9e2d\u672c\u5730\u684c\u9762\u8bbe\u7f6e\uff0c\u5b9e\u65f6\u8c03\u6574\u663e\u793a\u3001\u5927\u5c0f\u3001\u900f\u660e\u5ea6\u3001\u4f4d\u7f6e\u9501\u5b9a\u4e0e\u5582\u56fe\uff1b\u4e0d\u8c03\u7528\u6a21\u578b\u3002", "inputSchema": {"type": "object", "properties": {"action": {"enum": ["read", "update", "reset_position"]}, "values": {"type": "object"}, "expected_revision": {"type": "integer"}}, "required": [], "additionalProperties": false}}, {"name": "plugin_storage", "description": "\u67e5\u770b\u63d2\u4ef6\u672c\u5730\u8d44\u6599\u4f4d\u7f6e\uff0c\u6216\u6253\u5f00\u5df2\u767b\u8bb0\u7684\u8d44\u6599\u76ee\u5f55\uff1b\u65e0\u4e91\u5e93\u4e0a\u4f20\u3002", "inputSchema": {"type": "object", "properties": {"section": {"enum": ["root", "memory", "aesthetics", "projects"]}}, "required": [], "additionalProperties": false}}, {"name": "plugin_update", "description": "\u68c0\u67e5\u3001\u5b89\u88c5\u6216\u56de\u9000\u7ecf\u8fc7\u6821\u9a8c\u7684\u6620\u9020\u63d2\u4ef6\u8fd0\u884c\u65f6\uff1b\u4fdd\u7559\u672c\u5730\u8d44\u6599\uff0c\u4e0d\u7ec8\u6b62\u5728\u9014\u4efb\u52a1\u3002", "inputSchema": {"type": "object", "properties": {"action": {"enum": ["check", "install", "rollback", "status"]}}, "required": [], "additionalProperties": false}, "title": "\u6620\u9020 \u00b7 \u63d2\u4ef6\u66f4\u65b0\u4e0e\u56de\u9000"}, {"name": "plugin_memory", "description": "\u63d2\u4ef6\u5de5\u4f5c\u8bb0\u5fc6\uff1a\u4ec5\u68c0\u7d22\u63d2\u4ef6\u672c\u5730\u8bb0\u5fc6\u5e93\u53ca\u771f\u5b9e\u5de5\u4f5c\u56de\u6267\uff1bdistill\u6309\u539f\u6587\u63d0\u70bc\u5019\u9009\u5e76\u4fdd\u7559\u6765\u6e90\uff0c\u786e\u8ba4\u540e\u518dremember\uff1b\u539f\u56de\u6267\u53ea\u8bfb\u3002\u660e\u786e\u8bb0\u5fc6\u987b\u6709\u6d88\u606f\u6765\u6e90\uff0c\u4fee\u6539/\u5fd8\u8bb0\u987b\u5e26\u7248\u672c\uff0c\u9632\u91cd\u590d\u4e0e\u8de8\u9879\u76ee\u4e32\u5199\uff1b\u4e0d\u8c03\u7528\u6a21\u578b\u3002", "inputSchema": {"type": "object", "properties": {"action": {"enum": ["list", "recall", "remember", "update", "forget", "history", "export", "distill"]}, "project_id": {"type": "string"}, "query": {"type": "string"}, "offset": {"type": "integer", "minimum": 0}, "ident": {"type": "string"}, "text": {"type": "string"}, "expected_revision": {"type": "integer", "minimum": 1}, "source_message_id": {"type": "string"}, "operation_id": {"type": "string"}, "kind": {"enum": ["fact", "preference", "project", "procedure"]}, "pinned": {"type": "boolean"}}, "required": [], "additionalProperties": false}, "title": "\u6620\u9020 \u00b7 \u672c\u5730\u5de5\u4f5c\u8bb0\u5fc6"}, {"name": "plugin_request", "description": "\u6309\u9700\u8bb0\u5f55\u590d\u6742\u4efb\u52a1\u9700\u6c42\u6838\u5bf9\u4e0e\u8d44\u6599\u6765\u6e90\uff1b\u666e\u901a\u95ee\u7b54\u4e0d\u5f3a\u5236\u5efa\u6863\u6216\u5c55\u793a\u63d0\u793a\u8bcd\u3002\u751f\u56fe\u63d0\u793a\u8bcd\u7528plugin_external_step(action=prompt)\u7ed1\u5b9a\u5b9e\u9645\u5de5\u5177\u53c2\u6570\u3002audit\u4ec5\u6838\u5bf9\u5df2\u8bb0\u5f55\u4efb\u52a1\uff0c\u4e0d\u8bc1\u660e\u9690\u85cf\u601d\u7ef4\u6df1\u5ea6\uff0c\u4e0d\u8c03\u7528\u6a21\u578b\u3002", "inputSchema": {"type": "object", "properties": {"action": {"enum": ["begin", "optimize", "evidence", "get", "audit"]}, "ident": {"type": "string"}, "session_id": {"type": "string"}, "turn_id": {"type": "string"}, "agent_id": {"type": "string"}, "requirement": {"type": "string"}, "optimized_prompt": {"type": "string"}, "research": {"type": "object"}, "category": {"enum": ["project_rules", "skills", "source", "memory", "aesthetics", "web"]}, "location": {"type": "string"}, "finding": {"type": "string"}, "query": {"type": "string"}, "outcome": {"enum": ["read", "no_results", "unavailable"]}}, "required": [], "additionalProperties": false}, "title": "\u6620\u9020\u6b63\u5728\u4f7f\u7528\u4e2d \u00b7 \u9700\u6c42\u4e0e\u68c0\u7d22\u6838\u9a8c"}, {"name": "plugin_workflow", "description": "\u9ed8\u8ba4\u5236\u4f5c\u51c6\u5907\u4e0e\u6309\u9636\u6bb5\u6307\u5bfc\uff1aprepare\u68c0\u7d22\u672c\u5730\u5ba1\u7f8e\uff1bguide\u8bfb\u53d6\u7248\u672c\u5316\u6a21\u578b/\u7279\u6548\u65b9\u6cd5\uff1baudit_script\u751f\u6210\u5f85\u5bbf\u4e3b\u6267\u884c\u7684\u5f52\u5c5e\u573a\u666f\u53ea\u8bfb\u5ba1\u8ba1\u4ee3\u7801\uff0c\u751f\u6210\u4e0d\u4ee3\u8868\u68c0\u67e5\u901a\u8fc7\u3002search\u8bb0\u5f55\u5bbf\u4e3b\u8054\u7f51\u6765\u6e90\uff1b\u4e0d\u8c03\u7528\u6a21\u578b\u3002", "inputSchema": {"type": "object", "properties": {"action": {"enum": ["prepare", "search", "get", "design", "guide", "audit_script", "reference_read", "reference_bind", "reference_inspect", "bind"]}, "reference": {"type": "object"}, "stage": {"enum": ["reference", "shape", "topology", "uv", "materials", "rig", "animation", "vfx", "qa", "export"]}, "collection": {"type": "string"}, "texture_resolution": {"type": "integer", "minimum": 1, "maximum": 16384}, "plan": {"type": "object"}, "requirement": {"type": "string"}, "kind": {"type": "string"}, "project_id": {"type": "string"}, "context_id": {"type": "string"}, "query": {"type": "string"}, "sources": {"type": "array", "items": {"type": "object"}}, "status": {"enum": ["completed", "no_results", "unavailable", "not_required"]}}, "required": [], "additionalProperties": false}, "title": "\u6620\u9020\u6b63\u5728\u4f7f\u7528\u4e2d \u00b7 \u5de5\u4f5c\u6d41\u4e0e\u5ba1\u7f8e\u68c0\u7d22"}, {"name": "plugin_external_step", "description": "Codex\u5916\u90e8\u5de5\u5e8f\uff1a\u751f\u56fe\u524dprompt\u63d0\u4ea4\u5f53\u524dAgent\u4f18\u5316\u7684\u7ed8\u56fe\u8bf4\u660e\u3001\u5b9e\u9645target_tool\u53catool_arguments\uff1b\u6309\u8fd4\u56de\u53c2\u6570\u6267\u884c\uff0csubmit\u63d0\u4f9b\u539frequest_id\u3001tool_arguments\u53caprompt_sha256\uff0c\u4e0d\u4ee5\u63d0\u793a\u8bcd\u5c55\u793a\u4ee3\u66ff\u5b9e\u9645\u4f20\u53c2\u3002\u9ed8\u8ba430\u5206\u949f\u79df\u7ea6\uff0c\u957f\u5de5\u5177\u53ef\u9884\u8bbelease_seconds\u5e76heartbeat\u7eed\u79df\uff08\u4e0d\u662f\u5236\u4f5c\u8fdb\u5ea6\uff09\u3002\u8fc7\u671f\u5148get\u67e5\u770brecovery_contract\uff1breconcile\u6309not_started/checkpoint/running\u63d0\u4f9b\u539f\u6267\u884c\u8bc1\u636e\uff0c\u4e0d\u80fd\u865a\u6784\u68c0\u67e5\u70b9\u3002\u540c\u4e00\u5199\u5165\u8005\u7684\u771f\u5b9e\u665a\u5230\u4ea7\u7269\u53ef\u76f4\u63a5submit\uff1b\u4e0d\u91cd\u590d\u5e94\u7528\u6216\u6a21\u578b\u8c03\u7528\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}, "action": {"enum": ["create", "claim", "prompt", "heartbeat", "progress", "submit", "reconcile", "review", "get"]}, "lease_seconds": {"type": "integer", "minimum": 120, "maximum": 7200, "description": "\u539f\u5199\u5165\u8005\u7684\u79df\u7ea6\u65f6\u957f\uff1b\u9ed8\u8ba41800\uff0c\u957f\u5de5\u5177\u8c03\u7528\u524d\u6309\u771f\u5b9e\u8017\u65f6\u5ef6\u957f\u3002"}, "step_id": {"type": "string"}, "optimized_prompt": {"type": "string"}, "target_tool": {"type": "string"}, "tool_arguments": {"type": "object"}, "asset_id": {"type": "string"}, "target_profile": {"type": "object"}, "capabilities": {"type": "array", "items": {"type": "string"}}, "owner": {"type": "string"}, "scene_id": {"type": "string"}, "session_id": {"type": "string"}, "claim_token": {"type": "string"}, "sequence": {"type": "integer"}, "event": {"type": "object"}, "files": {"type": "array", "items": {"type": "object"}}, "tool_receipt": {"type": "object"}, "evidence": {"type": "object", "properties": {"execution_state": {"enum": ["not_started", "checkpoint", "running"]}, "operation_id": {"type": "string"}, "observation": {"type": "string", "description": "\u5b9e\u9645\u6838\u5bf9\u539f\u5de5\u5177\u3001\u539f\u8bf7\u6c42\u548c\u4ea7\u7269\u6240\u89c1\uff0c\u4e0d\u80fd\u7167\u6284\u793a\u4f8b\u5192\u5145\u68c0\u67e5\u3002"}, "outcome": {"enum": ["not_sent"]}, "checkpoint_path": {"type": "string", "description": "\u5b9e\u9645\u68c0\u67e5\u70b9\u6587\u4ef6\u7684\u7edd\u5bf9\u8def\u5f84\uff0c\u4ec5checkpoint\u6a21\u5f0f\u4f7f\u7528\u3002"}, "checkpoint_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "tool_receipt": {"type": "object", "properties": {"application": {"type": "string"}, "operation_id": {"type": "string"}, "request_id": {"type": "string"}}, "required": ["application", "operation_id", "request_id"]}}, "required": ["execution_state", "operation_id", "observation"]}, "candidate_id": {"type": "string"}, "review": {"type": "object"}, "request_id": {"type": "string"}}, "required": ["project_id", "action", "step_id"], "additionalProperties": false}, "title": "\u6620\u9020 \u00b7 \u5916\u90e8\u5de5\u5e8f\u4e0e\u6062\u590d"}, {"name": "plugin_select_delivery", "description": "\u663e\u5f0f\u9009\u62e9\u5f53\u524d\u4fee\u8ba2\u5df2\u767b\u8bb0\u5019\u9009\u7684\u5b9e\u9645\u4ea4\u4ed8\u6587\u4ef6\uff0c\u7ed1\u5b9aSHA\uff1b\u4e0d\u4ee5\u6700\u65b0\u65f6\u95f4\u9009\u62e9\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}, "candidate_id": {"type": "string"}, "file": {"type": "string"}, "sha256": {"type": "string"}, "format": {"type": "string"}}, "required": ["project_id", "candidate_id", "file", "sha256"], "additionalProperties": false}}, {"name": "plugin_tasks", "description": "\u5217\u51fa\u539f\u63d2\u4ef6\u4efb\u52a1\uff0c\u4e0d\u8fde\u63a5\u6a21\u578b\u3001\u4e0d\u8c03\u7528 API\u3002", "inputSchema": {"type": "object", "properties": {}, "required": [], "additionalProperties": false}}, {"name": "plugin_revise", "description": "\u5c06\u5bbf\u4e3b Agent \u4e2d\u660e\u786e\u7684\u9700\u6c42\u4fee\u6539\u4fdd\u5b58\u5230\u539f\u4efb\u52a1\uff1b\u9700\u539f input_revision\uff0c\u62d2\u7edd\u4fee\u6539\u5728\u9014\u6216\u672a\u77e5\u4efb\u52a1\uff0c\u4e0d\u8c03\u7528\u6a21\u578b\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}, "requirement": {"type": "string"}, "expected_revision": {"type": "integer", "minimum": 1}}, "required": ["project_id", "requirement", "expected_revision"], "additionalProperties": false}}, {"name": "plugin_render", "description": "\u660e\u786e\u5236\u4f5c\u5df2\u4fee\u8ba2\u539f\u4efb\u52a1\uff0c\u6cbf\u7528\u539f\u9879\u76ee\u3001\u53c2\u8003\u548c\u989d\u5ea6\uff1b\u7a33\u5b9a request_id \u9632\u91cd\u590d\uff0c\u672a\u77e5\u8bf7\u6c42\u5148\u6838\u5bf9\uff0c\u4e0d\u81ea\u52a8\u5207\u670d\u52a1\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}, "request_id": {"type": "string"}}, "required": ["project_id", "request_id"], "additionalProperties": false}}, {"name": "plugin_status", "description": "\u8bfb\u53d6\u63d2\u4ef6\u5f00\u5173\u4e0e\u5e76\u53d1\u8bbe\u7f6e\uff0c\u4e0d\u8bfb\u53d6\u5bc6\u94a5\u3001\u4e0d\u8c03\u7528\u6a21\u578b\uff1b\u63d2\u4ef6\u5165\u53e3\u65e0\u9700connect\u3002", "inputSchema": {"type": "object", "properties": {}, "required": [], "additionalProperties": false}}, {"name": "plugin_configure", "description": "\u6253\u5f00\u6216\u5173\u95ed\u6620\u9020 API \u63d2\u4ef6\u3002\u542f\u7528\u6620\u9020\u5de5\u4f5c\u6d41\u3001\u8d44\u4ea7\u670d\u52a1\u548c\u684c\u9762\u4e2b\u9e2d\uff1b\u5185\u90e8API\u53e6\u7531\u72ec\u7acb\u5f00\u5173\u63a7\u5236\u3002\u5173\u95ed\u4e0d\u53d6\u6d88\u5df2\u63a5\u53d7\u4efb\u52a1\uff0c\u53ef\u7528plugin_pause\u6682\u505c\u3002\u4e0d\u4f1a\u8c03\u7528\u6a21\u578b\u3002", "inputSchema": {"type": "object", "properties": {"enabled": {"type": "boolean"}}, "required": ["enabled"], "additionalProperties": false}}, {"name": "plugin_workbench", "description": "\u67e5\u770b\u539f\u5236\u4f5c\u4efb\u52a1\u7684\u5de5\u4f5c\u8fc7\u7a0b\uff0c\u987b\u6307\u5b9a project_id\uff1b\u65e0\u4efb\u52a1\u4e0d\u6253\u5f00\u7a7a\u5de5\u4f5c\u53f0\u3002settings=true\u4ec5\u8fdb\u5165\u72ec\u7acb\u63d2\u4ef6API\u8bbe\u7f6e\uff0c\u5bc6\u94a5\u53ea\u5728\u672c\u673a\u9875\u9762\u4fdd\u5b58\uff0c\u4e0d\u7ecf\u804a\u5929\u3002\u4e0d\u8c03\u7528\u6a21\u578b\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}, "settings": {"type": "boolean"}}, "required": [], "additionalProperties": false}, "title": "\u6253\u5f00\u6620\u9020\u5236\u4f5c\u5de5\u4f5c\u53f0"}, {"name": "plugin_create", "description": "\u9ed8\u8ba4\u7531\u5bbf\u4e3bAgent\u5236\u4f5c\uff0c\u5185\u90e8API\u5173\u95ed\u6216\u672a\u914d\u7f6e\u4e0d\u5f71\u54cd\u6b63\u5e38\u5de5\u5177\u548c\u4ee3\u7801\u5de5\u4f5c\u3002settings.execution_backend=host_session\u53ef\u660e\u786e\u4f7f\u7528\u5bbf\u4e3b\uff1b\u4e0d\u9700\u8981\u751f\u56fe\u65f6requires_image_generation=false\u3002\u53ea\u6709\u624b\u52a8\u9009\u62e9\u5185\u90e8API\u6216\u786e\u8bc1\u5bbf\u4e3b\u7f3a\u5c11\u751f\u56fe\u80fd\u529b\u624d\u68c0\u67e5\u5185\u90e8\u670d\u52a1\uff1b\u540e\u8005\u987b\u63d0\u4f9bsettings.host_image_capability={capability:image_generation,status:unsupported,checked_tools:\u5b9e\u9645\u5de5\u5177\u5217\u8868,observation:\u5b9e\u9645\u8bc1\u636e}\uff0c\u4ec5\u6388\u6743\u5f53\u524d\u4efb\u52a1\uff0c\u4e0d\u6539\u9ed8\u8ba4\u5f00\u5173\u3002\u6620\u9020\u7edf\u4e00\u5236\u4f5c\u5165\u53e3\uff0c\u65e0\u9700connect\uff1a\u5185\u90e8API\u5173\u95ed\u65f6\u4ecd\u767b\u8bb0\u5de5\u4f5c\u6d41\u3001\u5ba1\u7f8e\u4e0e\u53c2\u8003\uff0c\u4ea4\u7ed9\u5f53\u524d\u5bbf\u4e3b\u5b9e\u9645\u6267\u884c\uff1b\u5f00\u542f\u4e14\u914d\u7f6e\u540e\u624d\u7528\u5185\u90e8\u670d\u52a1\u3002\u76f8\u540crequest_id\u53ea\u6838\u5bf9\u539f\u56de\u6267\uff0c\u4e0d\u91cd\u53d1\u672a\u77e5\u8bf7\u6c42\u3002\u4e0eplugin_workflow\u53caplugin_external_step\u5f62\u6210\u51c6\u5907\u3001\u6267\u884c\u3001\u56de\u5199\u3001\u81ea\u5ba1\u5168\u94fe\u8def\u3002", "inputSchema": {"type": "object", "properties": {"requirement": {"type": "string"}, "request_id": {"type": "string"}, "title": {"type": "string"}, "style": {"type": "string"}, "kind": {"enum": ["auto", "image", "game_ui", "web_ui", "posters", "animation", "novel", "models", "vfx"]}, "settings": {"type": "object"}, "layout_design": {"type": "object"}, "reference_files": {"type": "array", "maxItems": 12, "items": {"type": "object", "properties": {"path": {"type": "string"}, "sha256": {"type": "string"}, "role": {"type": "string"}}, "required": ["path", "sha256", "role"], "additionalProperties": false}}, "max_calls": {"type": "integer", "minimum": 1}, "max_images": {"type": "integer", "minimum": 1}}, "required": ["requirement", "request_id"], "additionalProperties": false}, "title": "\u6620\u9020 \u00b7 \u767b\u8bb0\u5236\u4f5c\u4efb\u52a1"}, {"name": "plugin_task", "description": "\u8bfb\u53d6\u63d2\u4ef6\u539f\u4efb\u52a1\u3001\u4ea7\u7269\u3001\u771f\u5b9e\u6b65\u9aa4\u548c\u989d\u5ea6\uff0c\u4e0d\u91cd\u53d1\u8bf7\u6c42\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}}, "required": ["project_id"], "additionalProperties": false}, "title": "\u6620\u9020 \u00b7 \u8bfb\u53d6\u771f\u5b9e\u8fdb\u5ea6"}, {"name": "plugin_layout_export", "description": "\u5bfc\u51fa\u5df2\u7ed1\u5b9a\u5e03\u5c40\u4e0e\u72ec\u7acb\u7d20\u6750\u3001\u7ebf\u6846\u3001\u5404\u72b6\u6001\u62fc\u88c5HTML\u53ca\u6307\u7eb9\u6e05\u5355\uff1b\u4ec5\u672c\u5730\u3001\u4e0d\u7f29\u653e\u3001\u4e0d\u8c03\u7528\u6a21\u578b\uff0c\u4e0d\u4ee3\u8868\u6e38\u620f\u5185\u5df2\u9a8c\u6536\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}}, "required": ["project_id"], "additionalProperties": false}}, {"name": "plugin_pause", "description": "\u6682\u505c\u63d2\u4ef6\u539f\u9879\u76ee\uff1b\u4fdd\u7559\u5df2\u6d3e\u53d1\u8fd4\u56de\u4e0e\u672a\u77e5\u8bf7\u6c42\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}}, "required": ["project_id"], "additionalProperties": false}}, {"name": "plugin_continue", "description": "\u4ece\u5df2\u786e\u8ba4\u8bbe\u8ba1\u7ee7\u7eed\u539f\u6a21\u578b/\u7279\u6548\u4efb\u52a1\uff0c\u7a33\u5b9arequest_id\u9632\u91cd\u590d\uff1b\u672a\u786e\u8ba4\u6216\u7f3a\u5c11\u9002\u914d\u5668\u4f1a\u660e\u786e\u963b\u585e\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}, "request_id": {"type": "string"}}, "required": ["project_id", "request_id"], "additionalProperties": false}}, {"name": "get_panel_state", "description": "\u8bfb\u53d6\u8131\u654f\u770b\u677f\u72b6\u6001\u4e0e\u5c0f\u7f29\u7565\u56fe\uff0c\u4e0d\u8c03\u7528\u6a21\u578b\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}, "run_id": {"type": "string"}}, "required": ["project_id"], "additionalProperties": false}, "_meta": {"ui": {"visibility": ["app"]}}, "annotations": {"readOnlyHint": true}}, {"name": "get_panel_image", "description": "\u6309\u672c\u9879\u76ee\u5df2\u8bb0\u5f55\u56fe\u7247\u7f16\u53f7\u8bfb\u53d6\u9884\u89c8\uff1b\u4e0d\u63a5\u53d7\u4efb\u610f\u8def\u5f84\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}, "kind": {"enum": ["asset", "design", "design_input", "attachment"]}, "version_id": {"type": "string"}, "max_edge": {"type": "integer", "minimum": 1, "maximum": 8192}}, "required": ["project_id", "kind", "version_id"], "additionalProperties": false}, "_meta": {"ui": {"visibility": ["app"]}}, "annotations": {"readOnlyHint": true}}, {"name": "plugin_review_state", "description": "\u8bfb\u53d6\u5f53\u524d\u804a\u5929\u5ba1\u67e5\u6e05\u5355\u3001\u4ea7\u7269\u6307\u7eb9\u4e0e\u539f\u56fe\u5165\u53e3\uff1b\u4e0d\u8c03\u7528\u6a21\u578b\u3001\u4e0d\u6539\u53d8\u4eba\u5de5\u6279\u51c6\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}}, "required": ["project_id"], "additionalProperties": false}}, {"name": "plugin_review", "description": "\u5f53\u524dAgent\u68c0\u67e5\u5b9e\u9645\u4ea7\u7269\u540e\u9010\u4ef6\u63d0\u4ea4\u5e26\u8bc1\u636e\u5224\u65ad\uff1b\u7ed1\u5b9a\u7248\u672c\u4e0e\u9700\u6c42\uff0c\u9632\u91cd\u590d\uff0c\u4e0d\u8c03\u7528\u5185\u90e8API\u6216\u4f2a\u9020\u4eba\u5de5\u6279\u51c6\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}, "fingerprint": {"type": "string", "minLength": 64, "maxLength": 64}, "request_id": {"type": "string", "minLength": 1, "maxLength": 160}, "reviewer": {"type": "object", "properties": {"kind": {"enum": ["agent"]}, "name": {"type": "string"}, "tool": {"type": "string"}, "model": {"type": ["string", "null"]}}, "required": ["kind", "name", "tool"]}, "judgments": {"type": "array", "minItems": 1, "items": {"type": "object", "properties": {"id": {"type": "string"}, "sha256": {"type": "string", "minLength": 64, "maxLength": 64}, "observations": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"type": "object", "properties": {"criterion_id": {"type": "string"}, "finding": {"type": "string", "minLength": 1, "maxLength": 2400}, "repair": {"type": "object", "properties": {"defect": {"enum": ["content", "evidence", "layout", "motion", "pixels"]}, "method": {"enum": ["local_pixels", "local_composition", "local_animation", "image_edit", "image_generation", "collect_evidence"]}, "change": {"type": "string", "minLength": 1, "maxLength": 2400}}, "required": ["defect", "method", "change"], "additionalProperties": false}, "views": {"type": "array", "minItems": 1, "maxItems": 40, "items": {"type": "object", "properties": {"source_id": {"type": "string"}, "sha256": {"type": "string", "minLength": 64, "maxLength": 64}, "readability": {"enum": ["readable", "uncertain", "unreadable"]}, "box": {"anyOf": [{"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "integer"}}, {"type": "null"}]}}, "required": ["source_id", "sha256", "readability", "box"], "additionalProperties": false}}, "comparison": {"type": "object", "properties": {"previous_source_id": {"type": "string"}, "before": {"enum": ["satisfied", "not_satisfied", "uncertain"]}, "after": {"enum": ["satisfied", "not_satisfied", "uncertain"]}, "regression": {"enum": ["lost", "not_lost", "unknown"]}}, "required": ["previous_source_id", "before", "after", "regression"], "additionalProperties": false}}, "required": ["criterion_id", "finding", "views"], "additionalProperties": false}}, "assessment": {"type": "object", "properties": {"criteria": {"type": "array", "minItems": 1, "items": {"type": "object", "properties": {"criterion_id": {"type": "string"}, "status": {"enum": ["satisfied", "not_satisfied", "uncertain"]}, "evidence": {"type": "string", "minLength": 1}}, "required": ["criterion_id", "status", "evidence"]}}}, "required": ["criteria"]}}, "required": ["id", "sha256", "assessment"]}}}, "required": ["project_id", "fingerprint", "request_id", "reviewer", "judgments"], "additionalProperties": false}}, {"name": "plugin_design_review_state", "description": "AI\u4e2d\u95f4\u8bbe\u8ba1\u81ea\u5ba1\uff1a\u7ed1\u5b9a\u771f\u5b9e\u8bbe\u8ba1\u548c\u53c2\u8003\u8bc1\u636e\uff0c\u901a\u8fc7\u540e\u81ea\u52a8\u7ee7\u7eed\u539f\u5236\u4f5c\uff1b\u4e0d\u8bf7\u6c42\u4e2d\u95f4\u4eba\u5de5\u6279\u51c6\uff0c\u6700\u7ec8\u4eba\u5de5\u9a8c\u6536\u53e6\u884c\u8fdb\u884c\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}}, "required": ["project_id"], "additionalProperties": false}}, {"name": "plugin_design_review", "description": "AI\u4e2d\u95f4\u8bbe\u8ba1\u81ea\u5ba1\uff1a\u7ed1\u5b9a\u771f\u5b9e\u8bbe\u8ba1\u548c\u53c2\u8003\u8bc1\u636e\uff0c\u901a\u8fc7\u540e\u81ea\u52a8\u7ee7\u7eed\u539f\u5236\u4f5c\uff1b\u4e0d\u8bf7\u6c42\u4e2d\u95f4\u4eba\u5de5\u6279\u51c6\uff0c\u6700\u7ec8\u4eba\u5de5\u9a8c\u6536\u53e6\u884c\u8fdb\u884c\u3002", "inputSchema": {"type": "object", "properties": {"project_id": {"type": "string"}, "fingerprint": {"type": "string", "minLength": 64, "maxLength": 64}, "request_id": {"type": "string", "minLength": 1, "maxLength": 160}, "reviewer": {"type": "object", "properties": {"kind": {"enum": ["agent"]}, "name": {"type": "string"}, "tool": {"type": "string"}, "model": {"type": ["string", "null"]}}, "required": ["kind", "name", "tool"]}, "judgments": {"type": "array", "minItems": 1, "items": {"type": "object", "properties": {"id": {"type": "string"}, "sha256": {"type": "string", "minLength": 64, "maxLength": 64}, "observations": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"type": "object", "properties": {"criterion_id": {"type": "string"}, "finding": {"type": "string", "minLength": 1, "maxLength": 2400}, "repair": {"type": "object", "properties": {"defect": {"enum": ["content", "evidence", "layout", "motion", "pixels"]}, "method": {"enum": ["local_pixels", "local_composition", "local_animation", "image_edit", "image_generation", "collect_evidence"]}, "change": {"type": "string", "minLength": 1, "maxLength": 2400}}, "required": ["defect", "method", "change"], "additionalProperties": false}, "views": {"type": "array", "minItems": 1, "maxItems": 40, "items": {"type": "object", "properties": {"source_id": {"type": "string"}, "sha256": {"type": "string", "minLength": 64, "maxLength": 64}, "readability": {"enum": ["readable", "uncertain", "unreadable"]}, "box": {"anyOf": [{"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "integer"}}, {"type": "null"}]}}, "required": ["source_id", "sha256", "readability", "box"], "additionalProperties": false}}, "comparison": {"type": "object", "properties": {"previous_source_id": {"type": "string"}, "before": {"enum": ["satisfied", "not_satisfied", "uncertain"]}, "after": {"enum": ["satisfied", "not_satisfied", "uncertain"]}, "regression": {"enum": ["lost", "not_lost", "unknown"]}}, "required": ["previous_source_id", "before", "after", "regression"], "additionalProperties": false}}, "required": ["criterion_id", "finding", "views"], "additionalProperties": false}}, "assessment": {"type": "object", "properties": {"criteria": {"type": "array", "minItems": 1, "items": {"type": "object", "properties": {"criterion_id": {"type": "string"}, "status": {"enum": ["satisfied", "not_satisfied", "uncertain"]}, "evidence": {"type": "string", "minLength": 1}}, "required": ["criterion_id", "status", "evidence"]}}}, "required": ["criteria"]}}, "required": ["id", "sha256", "assessment"]}}}, "required": ["project_id", "fingerprint", "request_id", "reviewer", "judgments"], "additionalProperties": false}}]}
+{
+  "schema": 1,
+  "tools": [
+    {
+      "name": "plugin_settings_read",
+      "description": "读取映造原生插件设置与本机 API 管理入口；不读取密钥、不联网。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ]
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "object"
+          },
+          "schema": {
+            "type": "object"
+          },
+          "layout": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "values",
+          "schema"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "plugin_settings_api",
+      "description": "连接与密钥",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ],
+          "resourceUri": "ui://yingzao/settings-api.html"
+        }
+      },
+      "title": "连接与密钥"
+    },
+    {
+      "name": "plugin_settings_aesthetics",
+      "description": "审美库",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ],
+          "resourceUri": "ui://yingzao/settings-aesthetics.html"
+        }
+      },
+      "title": "审美库"
+    },
+    {
+      "name": "plugin_settings_memory",
+      "description": "工作记忆",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ],
+          "resourceUri": "ui://yingzao/settings-memory.html"
+        }
+      },
+      "title": "工作记忆"
+    },
+    {
+      "name": "plugin_settings_storage",
+      "description": "本地资料与更新",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ],
+          "resourceUri": "ui://yingzao/settings-storage.html"
+        }
+      },
+      "title": "本地资料与更新"
+    },
+    {
+      "name": "plugin_settings_reset_desktop",
+      "description": "找回丫鸭 · 重置位置",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ]
+        }
+      }
+    },
+    {
+      "name": "plugin_api_preferences",
+      "description": "设置弹窗的非密钥服务配置；密钥只在用户点击后打开的本机表单输入，不自动调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "read",
+              "save",
+              "catalog",
+              "key_page"
+            ]
+          },
+          "values": {
+            "type": "object"
+          },
+          "revision": {
+            "type": "string"
+          },
+          "target": {
+            "enum": [
+              "image",
+              "assistant"
+            ]
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ]
+        }
+      }
+    },
+    {
+      "name": "plugin_settings_update",
+      "description": "保存启用、内部 API 权限、自动分析与丫鸭设置，不接收密钥。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "set": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "title": "启用映造",
+                "description": "启用工作流与桌面入口；关闭不取消已接受任务。"
+              },
+              "use_internal_api": {
+                "type": "boolean",
+                "title": "使用映造内部 API",
+                "description": "仅选择内部模型服务；默认关闭。关闭不影响宿主Agent制作、识别、检索或代码工作。宿主明确缺少所需生图能力时才检查已授权内部服务，不因超时擅自切换。"
+              },
+              "desktop_visible": {
+                "type": "boolean",
+                "title": "显示桌面丫鸭",
+                "description": "隐藏时保留位置；启用映造后生效。"
+              },
+              "desktop_size": {
+                "type": "integer",
+                "title": "丫鸭大小（px）",
+                "minimum": 96,
+                "maximum": 320
+              },
+              "desktop_opacity": {
+                "type": "integer",
+                "title": "丫鸭不透明度（%）",
+                "minimum": 30,
+                "maximum": 100
+              },
+              "desktop_topmost": {
+                "type": "boolean",
+                "title": "保持置顶"
+              },
+              "desktop_locked": {
+                "type": "boolean",
+                "title": "锁定丫鸭位置"
+              },
+              "desktop_feed_enabled": {
+                "type": "boolean",
+                "title": "允许拖入喂图"
+              },
+              "desktop_auto_analyze": {
+                "type": "boolean",
+                "title": "喂图后自动分析",
+                "description": "默认由 Codex Agent 看图提炼；结果只写入本地库，不推定喜欢。"
+              },
+              "desktop_analysis_concurrency": {
+                "type": "integer",
+                "title": "不同图片同时分析数",
+                "minimum": 1,
+                "maximum": 8,
+                "description": "默认3；同图只发一次，未知结果单独隔离，不阻塞其他图片。"
+              },
+              "desktop_analysis_backend": {
+                "type": "string",
+                "title": "自动分析执行方式",
+                "enum": [
+                  "codex_agent",
+                  "internal_api"
+                ],
+                "enumNames": [
+                  "Codex Agent（默认）",
+                  "映造内部 API"
+                ],
+                "description": "默认使用当前 Codex；明确选择内部 API 或宿主确实没有所需能力时，才使用已允许的内部服务。"
+              },
+              "desktop_open_after_feed": {
+                "type": "boolean",
+                "title": "喂图后打开审美库"
+              }
+            },
+            "minProperties": 1,
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "set"
+        ],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ]
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "values"
+        ]
+      }
+    },
+    {
+      "name": "plugin_use_internal_api",
+      "description": "仅用户明确选择时全局启用内部API；宿主缺少生图能力使用plugin_create的任务级能力证据回退，不调用本工具改变默认开关。未配置打开本机配置，不发送模型请求。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "title": "使用映造内部 API"
+    },
+    {
+      "name": "plugin_open",
+      "description": "打开审美库与集中管理，含图片偏好、记忆、安全API配置、本地资料与更新；宿主支持时内嵌显示，否则独立本机页面。记忆不在工作台展示；不调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "title": "映造审美库",
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://yingzao/plugin.html"
+        },
+        "openai/ui": {
+          "entrypoints": [
+            {
+              "type": "global"
+            },
+            {
+              "type": "thread"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "plugin_aesthetics",
+      "description": "插件审美库：包体只读库与插件本地案例联合检索、原图、分析和明确反馈；reanalyze按明确source_id安排本地与包体新版重分析，保留旧分析与偏好，reanalysis_status查看回执；list/detail/recall不调用模型，recover仅恢复安装旁遗留媒体为偏好未知、未分析。不得把无元数据恢复说成原偏好恢复；不上传云库。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "list",
+              "detail",
+              "recall",
+              "recover",
+              "reanalyze",
+              "reanalysis_status",
+              "reanalysis_resume",
+              "reanalysis_reconcile",
+              "reanalysis_inspect",
+              "reanalysis_commit_host",
+              "prepare_extraction",
+              "commit_extraction",
+              "feedback",
+              "like",
+              "dislike",
+              "delete",
+              "feature_choice",
+              "all_features",
+              "all_library"
+            ]
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "all",
+              "analyzed",
+              "not_analyzed"
+            ]
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "ident": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "job_id": {
+            "type": "string"
+          },
+          "analysis": {
+            "type": "object"
+          },
+          "inspection_sha256": {
+            "type": "string"
+          },
+          "option_id": {
+            "type": "string"
+          },
+          "choice": {
+            "enum": [
+              "liked",
+              "disliked",
+              null
+            ]
+          },
+          "expected_choice": {
+            "enum": [
+              "liked",
+              "disliked",
+              null
+            ]
+          },
+          "include_images": {
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "title": "映造 · 审美库与原图参考"
+    },
+    {
+      "name": "plugin_model_texture",
+      "description": "映造模型贴图：prepare冻结视图方案，queue_capture采集真实相机，inputs绑定外部重绘输入，accept_view核对原工具回执，queue_project遮罩回投，queue_bake保存原生工程与可选GLB。status只读；队列不代表执行完成，不调用模型或内部API，不重发未知请求。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "prepare",
+              "status",
+              "queue_capture",
+              "inputs",
+              "accept_view",
+              "queue_project",
+              "queue_bake"
+            ]
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "pack_id": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object"
+          },
+          "operation_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "project_id",
+          "pack_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_desktop",
+      "description": "丫鸭本地桌面设置，实时调整显示、大小、透明度、位置锁定与喂图；不调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "read",
+              "update",
+              "reset_position"
+            ]
+          },
+          "values": {
+            "type": "object"
+          },
+          "expected_revision": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_storage",
+      "description": "查看插件本地资料位置，或打开已登记的资料目录；无云库上传。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "section": {
+            "enum": [
+              "root",
+              "memory",
+              "aesthetics",
+              "projects"
+            ]
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_update",
+      "description": "检查、安装或回退经过校验的映造插件运行时；保留本地资料，不终止在途任务。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "check",
+              "install",
+              "rollback",
+              "status"
+            ]
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "title": "映造 · 插件更新与回退"
+    },
+    {
+      "name": "plugin_memory",
+      "description": "插件工作记忆：仅检索插件本地记忆库及真实工作回执；distill按原文提炼候选并保留来源，确认后再remember；原回执只读。明确记忆须有消息来源，修改/忘记须带版本，防重复与跨项目串写；不调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "list",
+              "recall",
+              "remember",
+              "update",
+              "forget",
+              "history",
+              "export",
+              "distill"
+            ]
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "ident": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "source_message_id": {
+            "type": "string"
+          },
+          "operation_id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "fact",
+              "preference",
+              "project",
+              "procedure"
+            ]
+          },
+          "pinned": {
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "title": "映造 · 本地工作记忆"
+    },
+    {
+      "name": "plugin_request",
+      "description": "按需记录复杂任务需求核对与资料来源；普通问答不强制建档或展示提示词。生图提示词用plugin_external_step(action=prompt)绑定实际工具参数。audit仅核对已记录任务，不证明隐藏思维深度，不调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "begin",
+              "optimize",
+              "evidence",
+              "get",
+              "audit"
+            ]
+          },
+          "ident": {
+            "type": "string"
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "turn_id": {
+            "type": "string"
+          },
+          "agent_id": {
+            "type": "string"
+          },
+          "requirement": {
+            "type": "string"
+          },
+          "optimized_prompt": {
+            "type": "string"
+          },
+          "research": {
+            "type": "object"
+          },
+          "category": {
+            "enum": [
+              "project_rules",
+              "skills",
+              "source",
+              "memory",
+              "aesthetics",
+              "web"
+            ]
+          },
+          "location": {
+            "type": "string"
+          },
+          "finding": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "outcome": {
+            "enum": [
+              "read",
+              "no_results",
+              "unavailable"
+            ]
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "title": "映造正在使用中 · 需求与检索核验"
+    },
+    {
+      "name": "plugin_workflow",
+      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。search记录宿主联网来源；不调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "prepare",
+              "search",
+              "get",
+              "design",
+              "guide",
+              "audit_script",
+              "reference_read",
+              "reference_bind",
+              "reference_inspect",
+              "bind"
+            ]
+          },
+          "reference": {
+            "type": "object"
+          },
+          "stage": {
+            "enum": [
+              "reference",
+              "shape",
+              "topology",
+              "uv",
+              "materials",
+              "rig",
+              "animation",
+              "vfx",
+              "qa",
+              "export"
+            ]
+          },
+          "collection": {
+            "type": "string"
+          },
+          "texture_resolution": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 16384
+          },
+          "plan": {
+            "type": "object"
+          },
+          "requirement": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "context_id": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "status": {
+            "enum": [
+              "completed",
+              "no_results",
+              "unavailable",
+              "not_required"
+            ]
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "title": "映造正在使用中 · 工作流与审美检索"
+    },
+    {
+      "name": "plugin_external_step",
+      "description": "Codex外部工序：生图前prompt提交当前Agent优化的绘图说明、实际target_tool及tool_arguments；按返回参数执行，submit提供原request_id、tool_arguments及prompt_sha256，不以提示词展示代替实际传参。默认30分钟租约，长工具可预设lease_seconds并heartbeat续租（不是制作进度）。过期先get查看recovery_contract；reconcile按not_started/checkpoint/running提供原执行证据，不能虚构检查点。同一写入者的真实晚到产物可直接submit；不重复应用或模型调用。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "action": {
+            "enum": [
+              "create",
+              "claim",
+              "prompt",
+              "heartbeat",
+              "progress",
+              "submit",
+              "reconcile",
+              "review",
+              "get"
+            ]
+          },
+          "lease_seconds": {
+            "type": "integer",
+            "minimum": 120,
+            "maximum": 7200,
+            "description": "原写入者的租约时长；默认1800，长工具调用前按真实耗时延长。"
+          },
+          "step_id": {
+            "type": "string"
+          },
+          "optimized_prompt": {
+            "type": "string"
+          },
+          "target_tool": {
+            "type": "string"
+          },
+          "tool_arguments": {
+            "type": "object"
+          },
+          "asset_id": {
+            "type": "string"
+          },
+          "target_profile": {
+            "type": "object"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "owner": {
+            "type": "string"
+          },
+          "scene_id": {
+            "type": "string"
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "claim_token": {
+            "type": "string"
+          },
+          "sequence": {
+            "type": "integer"
+          },
+          "event": {
+            "type": "object"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "tool_receipt": {
+            "type": "object"
+          },
+          "evidence": {
+            "type": "object",
+            "properties": {
+              "execution_state": {
+                "enum": [
+                  "not_started",
+                  "checkpoint",
+                  "running"
+                ]
+              },
+              "operation_id": {
+                "type": "string"
+              },
+              "observation": {
+                "type": "string",
+                "description": "实际核对原工具、原请求和产物所见，不能照抄示例冒充检查。"
+              },
+              "outcome": {
+                "enum": [
+                  "not_sent"
+                ]
+              },
+              "checkpoint_path": {
+                "type": "string",
+                "description": "实际检查点文件的绝对路径，仅checkpoint模式使用。"
+              },
+              "checkpoint_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "tool_receipt": {
+                "type": "object",
+                "properties": {
+                  "application": {
+                    "type": "string"
+                  },
+                  "operation_id": {
+                    "type": "string"
+                  },
+                  "request_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "application",
+                  "operation_id",
+                  "request_id"
+                ]
+              }
+            },
+            "required": [
+              "execution_state",
+              "operation_id",
+              "observation"
+            ]
+          },
+          "candidate_id": {
+            "type": "string"
+          },
+          "review": {
+            "type": "object"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id",
+          "action",
+          "step_id"
+        ],
+        "additionalProperties": false
+      },
+      "title": "映造 · 外部工序与恢复"
+    },
+    {
+      "name": "plugin_select_delivery",
+      "description": "显式选择当前修订已登记候选的实际交付文件，绑定SHA；不以最新时间选择。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "candidate_id": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id",
+          "candidate_id",
+          "file",
+          "sha256"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_tasks",
+      "description": "列出原插件任务，不连接模型、不调用 API。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_revise",
+      "description": "将宿主 Agent 中明确的需求修改保存到原任务；需原 input_revision，拒绝修改在途或未知任务，不调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "requirement": {
+            "type": "string"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "project_id",
+          "requirement",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_render",
+      "description": "明确制作已修订原任务，沿用原项目、参考和额度；稳定 request_id 防重复，未知请求先核对，不自动切服务。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id",
+          "request_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_status",
+      "description": "读取插件开关与并发设置，不读取密钥、不调用模型；插件入口无需connect。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_configure",
+      "description": "打开或关闭映造 API 插件。启用映造工作流、资产服务和桌面丫鸭；内部API另由独立开关控制。关闭不取消已接受任务，可用plugin_pause暂停。不会调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_workbench",
+      "description": "查看原制作任务过程，须指定project_id。默认返回host_browser_handoff，Agent随即用宿主浏览器工具打开或复用准确地址，真实页面回执后报告可见；仅用户明确选择browser_target=system时启动系统浏览器。无任务不打开空工作台。settings=true仅进入独立插件API设置，密钥只在本机页面保存，不经聊天。不调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "settings": {
+            "type": "boolean"
+          },
+          "browser_target": {
+            "type": "string",
+            "enum": [
+              "host",
+              "system"
+            ]
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "title": "打开映造制作工作台"
+    },
+    {
+      "name": "plugin_create",
+      "description": "默认由宿主Agent制作，内部API关闭或未配置不影响正常工具和代码工作。settings.execution_backend=host_session可明确使用宿主；不需要生图时requires_image_generation=false。只有手动选择内部API或确证宿主缺少生图能力才检查内部服务；后者须提供settings.host_image_capability={capability:image_generation,status:unsupported,checked_tools:实际工具列表,observation:实际证据}，仅授权当前任务，不改默认开关。映造统一制作入口，无需connect：内部API关闭时仍登记工作流、审美与参考，交给当前宿主实际执行；开启且配置后才用内部服务。相同request_id只核对原回执，不重发未知请求。与plugin_workflow及plugin_external_step形成准备、执行、回写、自审全链路。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "requirement": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "style": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "auto",
+              "image",
+              "game_ui",
+              "web_ui",
+              "posters",
+              "animation",
+              "novel",
+              "models",
+              "vfx"
+            ]
+          },
+          "settings": {
+            "type": "object"
+          },
+          "layout_design": {
+            "type": "object"
+          },
+          "reference_files": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "sha256": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "sha256",
+                "role"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "max_calls": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "max_images": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "requirement",
+          "request_id"
+        ],
+        "additionalProperties": false
+      },
+      "title": "映造 · 登记制作任务"
+    },
+    {
+      "name": "plugin_task",
+      "description": "读取插件原任务、产物、真实步骤和额度，不重发请求。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "title": "映造 · 读取真实进度"
+    },
+    {
+      "name": "plugin_layout_export",
+      "description": "导出已绑定布局与独立素材、线框、各状态拼装HTML及指纹清单；仅本地、不缩放、不调用模型，不代表游戏内已验收。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_pause",
+      "description": "暂停插件原项目；保留已派发返回与未知请求。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_continue",
+      "description": "从已确认设计继续原模型/特效任务，稳定request_id防重复；未确认或缺少适配器会明确阻塞。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id",
+          "request_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_panel_state",
+      "description": "读取脱敏看板状态与小缩略图，不调用模型。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "run_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ]
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "get_panel_image",
+      "description": "按本项目已记录图片编号读取预览；不接受任意路径。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "asset",
+              "design",
+              "design_input",
+              "attachment"
+            ]
+          },
+          "version_id": {
+            "type": "string"
+          },
+          "max_edge": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8192
+          }
+        },
+        "required": [
+          "project_id",
+          "kind",
+          "version_id"
+        ],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ]
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "plugin_review_state",
+      "description": "读取当前聊天审查清单、产物指纹与原图入口；不调用模型、不改变人工批准。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_review",
+      "description": "当前Agent检查实际产物后逐件提交带证据判断；绑定版本与需求，防重复，不调用内部API或伪造人工批准。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "fingerprint": {
+            "type": "string",
+            "minLength": 64,
+            "maxLength": 64
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "reviewer": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "tool": {
+                "type": "string"
+              },
+              "model": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "name",
+              "tool"
+            ]
+          },
+          "judgments": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "sha256": {
+                  "type": "string",
+                  "minLength": 64,
+                  "maxLength": 64
+                },
+                "observations": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 32,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "criterion_id": {
+                        "type": "string"
+                      },
+                      "finding": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2400
+                      },
+                      "repair": {
+                        "type": "object",
+                        "properties": {
+                          "defect": {
+                            "enum": [
+                              "content",
+                              "evidence",
+                              "layout",
+                              "motion",
+                              "pixels"
+                            ]
+                          },
+                          "method": {
+                            "enum": [
+                              "local_pixels",
+                              "local_composition",
+                              "local_animation",
+                              "image_edit",
+                              "image_generation",
+                              "collect_evidence"
+                            ]
+                          },
+                          "change": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 2400
+                          }
+                        },
+                        "required": [
+                          "defect",
+                          "method",
+                          "change"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "views": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 40,
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "source_id": {
+                              "type": "string"
+                            },
+                            "sha256": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64
+                            },
+                            "readability": {
+                              "enum": [
+                                "readable",
+                                "uncertain",
+                                "unreadable"
+                              ]
+                            },
+                            "box": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "minItems": 4,
+                                  "maxItems": 4,
+                                  "items": {
+                                    "type": "integer"
+                                  }
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "source_id",
+                            "sha256",
+                            "readability",
+                            "box"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "comparison": {
+                        "type": "object",
+                        "properties": {
+                          "previous_source_id": {
+                            "type": "string"
+                          },
+                          "before": {
+                            "enum": [
+                              "satisfied",
+                              "not_satisfied",
+                              "uncertain"
+                            ]
+                          },
+                          "after": {
+                            "enum": [
+                              "satisfied",
+                              "not_satisfied",
+                              "uncertain"
+                            ]
+                          },
+                          "regression": {
+                            "enum": [
+                              "lost",
+                              "not_lost",
+                              "unknown"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "previous_source_id",
+                          "before",
+                          "after",
+                          "regression"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "criterion_id",
+                      "finding",
+                      "views"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "assessment": {
+                  "type": "object",
+                  "properties": {
+                    "criteria": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "criterion_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "enum": [
+                              "satisfied",
+                              "not_satisfied",
+                              "uncertain"
+                            ]
+                          },
+                          "evidence": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "criterion_id",
+                          "status",
+                          "evidence"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "criteria"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "sha256",
+                "assessment"
+              ]
+            }
+          }
+        },
+        "required": [
+          "project_id",
+          "fingerprint",
+          "request_id",
+          "reviewer",
+          "judgments"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_design_review_state",
+      "description": "AI中间设计自审：绑定真实设计和参考证据，通过后自动继续原制作；不请求中间人工批准，最终人工验收另行进行。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_design_review",
+      "description": "AI中间设计自审：绑定真实设计和参考证据，通过后自动继续原制作；不请求中间人工批准，最终人工验收另行进行。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "fingerprint": {
+            "type": "string",
+            "minLength": 64,
+            "maxLength": 64
+          },
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "reviewer": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "tool": {
+                "type": "string"
+              },
+              "model": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "name",
+              "tool"
+            ]
+          },
+          "judgments": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "sha256": {
+                  "type": "string",
+                  "minLength": 64,
+                  "maxLength": 64
+                },
+                "observations": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 32,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "criterion_id": {
+                        "type": "string"
+                      },
+                      "finding": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2400
+                      },
+                      "repair": {
+                        "type": "object",
+                        "properties": {
+                          "defect": {
+                            "enum": [
+                              "content",
+                              "evidence",
+                              "layout",
+                              "motion",
+                              "pixels"
+                            ]
+                          },
+                          "method": {
+                            "enum": [
+                              "local_pixels",
+                              "local_composition",
+                              "local_animation",
+                              "image_edit",
+                              "image_generation",
+                              "collect_evidence"
+                            ]
+                          },
+                          "change": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 2400
+                          }
+                        },
+                        "required": [
+                          "defect",
+                          "method",
+                          "change"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "views": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 40,
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "source_id": {
+                              "type": "string"
+                            },
+                            "sha256": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64
+                            },
+                            "readability": {
+                              "enum": [
+                                "readable",
+                                "uncertain",
+                                "unreadable"
+                              ]
+                            },
+                            "box": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "minItems": 4,
+                                  "maxItems": 4,
+                                  "items": {
+                                    "type": "integer"
+                                  }
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "source_id",
+                            "sha256",
+                            "readability",
+                            "box"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "comparison": {
+                        "type": "object",
+                        "properties": {
+                          "previous_source_id": {
+                            "type": "string"
+                          },
+                          "before": {
+                            "enum": [
+                              "satisfied",
+                              "not_satisfied",
+                              "uncertain"
+                            ]
+                          },
+                          "after": {
+                            "enum": [
+                              "satisfied",
+                              "not_satisfied",
+                              "uncertain"
+                            ]
+                          },
+                          "regression": {
+                            "enum": [
+                              "lost",
+                              "not_lost",
+                              "unknown"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "previous_source_id",
+                          "before",
+                          "after",
+                          "regression"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "criterion_id",
+                      "finding",
+                      "views"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "assessment": {
+                  "type": "object",
+                  "properties": {
+                    "criteria": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "criterion_id": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "enum": [
+                              "satisfied",
+                              "not_satisfied",
+                              "uncertain"
+                            ]
+                          },
+                          "evidence": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "criterion_id",
+                          "status",
+                          "evidence"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "criteria"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "sha256",
+                "assessment"
+              ]
+            }
+          }
+        },
+        "required": [
+          "project_id",
+          "fingerprint",
+          "request_id",
+          "reviewer",
+          "judgments"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}
