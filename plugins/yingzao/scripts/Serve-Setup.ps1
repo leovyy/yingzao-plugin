@@ -60,7 +60,9 @@ function Setup-Settings {
 function Setup-Tools {
  $input=@{type='object';properties=@{};additionalProperties=$false}
  $catalog=Get-Content -LiteralPath (Join-Path (Split-Path -Parent $PSScriptRoot) 'tool-catalog.json') -Raw -Encoding UTF8|ConvertFrom-Json
- if($catalog.schema -ne 1 -or @($catalog.tools).Count -ne 38){throw 'Plugin tool metadata invalid.'}
+ $names=@($catalog.tools|ForEach-Object{$_.name})
+ if($catalog.schema -ne 1 -or $names.Count -lt 1 -or $names.Count -gt 256 -or @($names|Select-Object -Unique).Count -ne $names.Count -or $names -notcontains 'plugin_settings_read'){throw 'Plugin tool metadata invalid.'}
+ foreach($entry in $catalog.tools){if($entry.name -notmatch '^[a-z][a-z0-9_]{0,79}$' -or $entry.inputSchema.type -ne 'object' -or -not $entry.description){throw 'Plugin tool metadata invalid.'}}
  $retry=@{name='plugin_setup_retry';title='重试安装映造运行时';description='只重试签名运行时安装，不调用模型。';inputSchema=@{type='object';properties=@{}};_meta=@{ui=@{visibility=@('app')}}}
  return @($catalog.tools)+@($retry)
 }
@@ -81,7 +83,7 @@ try {
     $script:init=$params
     $result=@{protocolVersion='2025-11-25';serverInfo=@{name='yingzao-production';version=$script:manifest.version};capabilities=@{tools=@{listChanged=$true};resources=@{};experimental=@{'openai/settings'=$script:capability};extensions=@{'openai/settings'=$script:capability}};instructions='映造首次安装异步下载签名运行时。安装期间只查看状态，禁止调用模型或改用其他收费服务。就绪后用plugin_status与plugin_workflow开始原任务。'}
    }elseif($method -eq 'server/discover'){
-    $result=@{resultType='complete';supportedVersions=@('2025-11-25','2026-07-28');capabilities=@{tools=@{listChanged=$true};resources=@{};extensions=@{'openai/settings'=$script:capability}};_meta=@{'io.modelcontextprotocol/serverInfo'=@{name='yingzao-production';version=$script:manifest.version}}}
+    Emit @{jsonrpc='2.0';id=$id;error=@{code=-32601;message='Use the supported initialize handshake (through 2025-11-25).'}};continue
    }else{
     Connect-Runtime
     if($script:ready -and $method -eq 'tools/call' -and $params.name -eq 'plugin_setup_retry'){Emit @{jsonrpc='2.0';id=$id;result=@{content=@(@{type='text';text='签名运行时已就绪，无需重试。'});structuredContent=@{state='ready';model_calls=0}}};continue}
@@ -90,6 +92,7 @@ try {
      'ping' {$result=@{}}
      'tools/list' {$result=@{tools=@(Setup-Tools)}}
      'resources/list' {$result=@{resources=@()}}
+     'resources/templates/list' {$result=@{resourceTemplates=@()}}
      'tools/call' {
       if($params.name -eq 'plugin_settings_read'){$data=Setup-Settings}
       elseif($params.name -eq 'plugin_setup_retry'){Launch-Installer;$data=@{state='installing';message='正在核对并安装签名运行时；已有下载不会重复启动。';model_calls=0}}

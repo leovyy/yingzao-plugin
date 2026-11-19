@@ -43,6 +43,64 @@
       }
     },
     {
+      "name": "plugin_settings_connection",
+      "description": "仅设置界面使用：管理连接、型号与独立3D服务；密钥由界面临时公钥封装，本机解封后DPAPI保存，绝不返回明文。不自动测试或生成。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "string",
+            "enum": [
+              "api",
+              "model"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "read",
+              "save",
+              "catalog",
+              "check"
+            ]
+          },
+          "values": {
+            "type": "object"
+          },
+          "revision": {
+            "type": "string"
+          },
+          "sealed_credentials": {
+            "type": "object"
+          },
+          "target": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "confirm_paid": {
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ]
+        }
+      }
+    },
+    {
       "name": "plugin_settings_api",
       "description": "连接与密钥",
       "inputSchema": {
@@ -59,7 +117,7 @@
           "resourceUri": "ui://yingzao/settings-api.html"
         }
       },
-      "title": "连接与密钥"
+      "title": "连接、加密密钥与 3D 服务"
     },
     {
       "name": "plugin_settings_aesthetics",
@@ -117,6 +175,25 @@
         }
       },
       "title": "本地资料与更新"
+    },
+    {
+      "name": "plugin_settings_workflows",
+      "description": "工作流库",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ],
+          "resourceUri": "ui://yingzao/settings-workflows.html"
+        }
+      },
+      "title": "工作流库"
     },
     {
       "name": "plugin_settings_reset_desktop",
@@ -192,6 +269,13 @@
                 "title": "使用映造内部 API",
                 "description": "仅选择内部模型服务；默认关闭。关闭不影响宿主Agent制作、识别、检索或代码工作。宿主明确缺少所需生图能力时才检查已授权内部服务，不因超时擅自切换。"
               },
+              "image_concurrency": {
+                "type": "integer",
+                "title": "生图并发上限",
+                "minimum": 0,
+                "maximum": 64,
+                "description": "0 自动按本机 CPU 和内存推荐，1–64 手动。所有任务共用，新上限从后续派发生效。"
+              },
               "desktop_visible": {
                 "type": "boolean",
                 "title": "显示桌面丫鸭",
@@ -240,15 +324,77 @@
                   "codex_agent",
                   "internal_api"
                 ],
-                "enumNames": [
-                  "Codex Agent（默认）",
-                  "映造内部 API"
-                ],
-                "description": "默认使用当前 Codex；明确选择内部 API 或宿主确实没有所需能力时，才使用已允许的内部服务。"
+                "description": "codex_agent：当前 Codex（默认）；internal_api：映造内部 API。仅明确选择或宿主确实没有所需能力时使用已允许的内部服务。"
               },
               "desktop_open_after_feed": {
                 "type": "boolean",
                 "title": "喂图后打开审美库"
+              },
+              "api_base": {
+                "type": "string",
+                "title": "图片服务地址",
+                "maxLength": 2048
+              },
+              "api_image_model": {
+                "type": "string",
+                "title": "生图模型",
+                "maxLength": 256
+              },
+              "api_text_model": {
+                "type": "string",
+                "title": "文字模型",
+                "maxLength": 256
+              },
+              "api_vision_model": {
+                "type": "string",
+                "title": "看图模型（留空沿用文字模型）",
+                "maxLength": 256
+              },
+              "api_relay": {
+                "type": "boolean",
+                "title": "允许向图片服务发送需求与参考"
+              },
+              "api_assistant_enabled": {
+                "type": "boolean",
+                "title": "使用独立文字与看图服务"
+              },
+              "api_assistant_base": {
+                "type": "string",
+                "title": "独立文字与看图服务地址",
+                "maxLength": 2048
+              },
+              "api_assistant_protocol": {
+                "type": "string",
+                "title": "独立服务协议",
+                "enum": [
+                  "responses",
+                  "chat_completions"
+                ]
+              },
+              "api_assistant_relay": {
+                "type": "boolean",
+                "title": "允许向独立服务发送内容"
+              },
+              "model_enabled": {
+                "type": "boolean",
+                "title": "启用独立 3D 服务"
+              },
+              "model_geometry": {
+                "type": "string",
+                "title": "3D 母版几何精度",
+                "enum": [
+                  "2k",
+                  "standard"
+                ]
+              },
+              "model_texture": {
+                "type": "string",
+                "title": "3D 母版贴图精度",
+                "enum": [
+                  "4k",
+                  "8k",
+                  "2k"
+                ]
               }
             },
             "minProperties": 1,
@@ -303,20 +449,10 @@
         "required": [],
         "additionalProperties": false
       },
-      "title": "映造审美库",
+      "title": "映造工作记忆",
       "_meta": {
         "ui": {
           "resourceUri": "ui://yingzao/plugin.html"
-        },
-        "openai/ui": {
-          "entrypoints": [
-            {
-              "type": "global"
-            },
-            {
-              "type": "thread"
-            }
-          ]
         }
       }
     },
@@ -654,7 +790,7 @@
     },
     {
       "name": "plugin_workflow",
-      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。失败记录不放行制作；不调用模型。",
+      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。失败记录不放行制作；不调用模型。 compose按需求与反馈从现有库选择工序并编译逐作品计划；start通过原编排器启动；advance推进真实回执、自审与局部返工；status只读当前计划和下一工序。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -669,7 +805,17 @@
               "reference_read",
               "reference_bind",
               "reference_inspect",
-              "bind"
+              "bind",
+              "compose",
+              "start",
+              "advance",
+              "status",
+              "catalog",
+              "diagnose",
+              "native_repair",
+              "optimize_delivery",
+              "animate",
+              "refine"
             ]
           },
           "reference": {
@@ -1022,6 +1168,9 @@
             "type": "string"
           },
           "model": {
+            "type": "string"
+          },
+          "step_id": {
             "type": "string"
           },
           "claim_token": {
