@@ -8,6 +8,20 @@ if(-not $HomePath){$HomePath=Join-Path $env:LOCALAPPDATA 'YingzaoPlugin'}
 $HomePath=[IO.Path]::GetFullPath($HomePath)
 if(-not $DataPath){$DataPath=Join-Path $HomePath 'data'}
 $DataPath=[IO.Path]::GetFullPath($DataPath)
+function Get-ReleaseAssets([string]$Selector){
+ $client=New-Object Net.WebClient
+ $client.Headers['User-Agent']='Yingzao-Plugin-Updater'
+ try {
+  $release=$client.DownloadString(('https://api.github.com/repos/'+$repository+'/releases/'+$Selector))|ConvertFrom-Json
+  if($release.draft -or $release.prerelease -or $release.tag_name -notmatch '^plugin-v\d+\.\d+\.\d+$'){throw 'Expected a stable plugin release.'}
+  return $release
+ }finally{$client.Dispose()}
+}
+function Get-AssetEndpoint($Release,[string]$Name){
+ $matchesForName=@($Release.assets|Where-Object {$_.name -ceq $Name -and $_.state -eq 'uploaded'})
+ if($matchesForName.Count -ne 1 -or [string]$matchesForName[0].id -notmatch '^[1-9][0-9]*$'){throw 'Official release asset missing.'}
+ return ('https://api.github.com/repos/'+$repository+'/releases/assets/'+$matchesForName[0].id)
+}
 function Hash-File([string]$Path){
  $stream=[IO.File]::OpenRead($Path);$hash=[Security.Cryptography.SHA256]::Create()
  try {return ([BitConverter]::ToString($hash.ComputeHash($stream))).Replace('-','').ToLowerInvariant()}finally{$stream.Dispose();$hash.Dispose()}
@@ -26,7 +40,14 @@ try {
  $handle.Lock(0,1);$locked=$true
  $client=New-Object Net.WebClient
  $client.Headers['User-Agent']='Yingzao-Plugin-Updater'
+ $fallbackRelease=$null
  try {$raw=$client.DownloadData($channel+'update.json');$signature=$client.DownloadString($channel+'update.sig')}
+ catch [Net.WebException] {
+  $fallbackRelease=Get-ReleaseAssets 'latest'
+  $client.Headers['Accept']='application/octet-stream'
+  $raw=$client.DownloadData((Get-AssetEndpoint $fallbackRelease 'update.json'))
+  $signature=$client.DownloadString((Get-AssetEndpoint $fallbackRelease 'update.sig'))
+ }
  finally {$client.Dispose()}
  if($raw.Length -gt 65536 -or $signature.Length -gt 4096){throw 'Update metadata exceeds size limit.'}
  $rsa=New-Object Security.Cryptography.RSACryptoServiceProvider
@@ -48,7 +69,17 @@ try {
  $stage=Join-Path $versions ('.staging-'+[Guid]::NewGuid().ToString('N'));New-Item -ItemType Directory -Path $stage|Out-Null
  $archive=Join-Path $HomePath ('.download-'+[Guid]::NewGuid().ToString('N')+'.zip')
  $client=New-Object Net.WebClient;$client.Headers['User-Agent']='Yingzao-Plugin-Updater'
- try {$client.DownloadFile($asset.url,$archive)}finally{$client.Dispose()}
+ try {
+  if(-not $fallbackRelease){
+   try {$client.DownloadFile($asset.url,$archive)}
+   catch [Net.WebException] {$fallbackRelease=Get-ReleaseAssets ('tags/plugin-v'+$asset.version)}
+  }
+  if($fallbackRelease){
+   if($fallbackRelease.tag_name -cne ('plugin-v'+$asset.version)){throw 'Signed metadata and release tag differ.'}
+   $client.Headers['Accept']='application/octet-stream'
+   $client.DownloadFile((Get-AssetEndpoint $fallbackRelease ([IO.Path]::GetFileName($expected))),$archive)
+  }
+ }finally{$client.Dispose()}
  if((Get-Item -LiteralPath $archive).Length -ne $asset.bytes -or (Hash-File $archive) -ne $asset.sha256){throw 'Package size or SHA256 mismatch.'}
  Add-Type -AssemblyName System.IO.Compression.FileSystem
  $zip=[IO.Compression.ZipFile]::OpenRead($archive)

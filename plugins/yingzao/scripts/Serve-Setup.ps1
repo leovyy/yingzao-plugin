@@ -10,8 +10,17 @@ function Emit($Value){[Console]::Out.WriteLine(($Value|ConvertTo-Json -Depth 80 
 function Launch-Installer {
  if($script:installer -and -not $script:installer.HasExited){return}
  $args=@('-NoLogo','-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',('"'+(Join-Path $PSScriptRoot 'Install-Runtime.ps1')+'"'),'-HomePath',('"'+$HomePath+'"'),'-DataPath',('"'+$DataPath+'"'))
- $empty=Join-Path $HomePath 'bootstrap-empty-input.txt';[IO.File]::WriteAllBytes($empty,[byte[]]@())
- $script:installer=Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -ArgumentList $args -WindowStyle Hidden -PassThru -RedirectStandardInput $empty -RedirectStandardOutput (Join-Path $HomePath 'bootstrap-install.log') -RedirectStandardError (Join-Path $HomePath 'bootstrap-install.error.log')
+ if($script:installer){$script:installer.Dispose();$script:installer=$null}
+ $start=New-Object Diagnostics.ProcessStartInfo
+ $start.FileName=Join-Path $PSHOME 'powershell.exe';$start.Arguments=$args -join ' '
+ $start.UseShellExecute=$false;$start.CreateNoWindow=$true
+ $start.RedirectStandardInput=$true;$start.RedirectStandardOutput=$true;$start.RedirectStandardError=$true
+ $worker=New-Object Diagnostics.Process;$worker.StartInfo=$start
+ try{
+  $null=$worker.Start();$worker.StandardInput.Close()
+  $worker.BeginOutputReadLine();$worker.BeginErrorReadLine()
+  $script:installer=$worker;$script:launchError=$null
+ }catch{$script:launchError=$_.Exception.Message;$worker.Dispose()}
 }
 function Runtime-Path {
  try {
@@ -52,10 +61,13 @@ function Connect-Runtime {
  $script:ready=$true
  Emit @{jsonrpc='2.0';method='notifications/tools/list_changed'}
 }
+function Setup-State {
+ if($script:launchError){return @{state='failed';message=$script:launchError}}
+ try{$state=Get-Content -LiteralPath (Join-Path $HomePath 'bootstrap-state.json') -Raw -Encoding UTF8|ConvertFrom-Json;if($state.message){return $state}}catch{}
+ return @{state='installing';message='正在准备运行时，完成后可使用完整设置。'}
+}
 function Setup-Settings {
- $message='首次安装正在准备运行时；下载完成后自动加载启用映造、内部API和完整设置。'
- try{$state=Get-Content -LiteralPath (Join-Path $HomePath 'bootstrap-state.json') -Raw -Encoding UTF8|ConvertFrom-Json;if($state.message){$message=$state.message}}catch{}
- return @{schema=@{type='object';properties=@{}};values=@{};layout=@(@{kind='group';title='映造插件 · '+$message;items=@(@{kind='tool';tool='plugin_setup_retry'})})}
+ return @{schema=@{type='object';properties=@{}};values=@{};layout=@(@{kind='group';title='映造插件 · '+(Setup-State).message;items=@(@{kind='tool';tool='plugin_setup_retry'})})}
 }
 function Setup-Tools {
  $input=@{type='object';properties=@{};additionalProperties=$false}
@@ -96,7 +108,7 @@ try {
      'tools/call' {
       if($params.name -eq 'plugin_settings_read'){$data=Setup-Settings}
       elseif($params.name -eq 'plugin_setup_retry'){Launch-Installer;$data=@{state='installing';message='正在核对并安装签名运行时；已有下载不会重复启动。';model_calls=0}}
-      elseif($params.name -eq 'plugin_status'){$data=@{state='installing';runtime_ready=$false;model_calls=0;message=(Setup-Settings).layout[0].title}}
+      elseif($params.name -eq 'plugin_status'){$state=Setup-State;$data=@{state=$state.state;runtime_ready=$false;model_calls=0;message=$state.message}}
       else{throw '运行时尚未安装，未执行制作或修改设置。'}
       $result=@{content=@(@{type='text';text=($data|ConvertTo-Json -Depth 30 -Compress)});structuredContent=$data}
      }
