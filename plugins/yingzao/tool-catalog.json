@@ -883,7 +883,7 @@
     },
     {
       "name": "plugin_external_step",
-      "description": "Codex外部工序：新视觉流程先keyframe美术通过再动画；review须visual_quality对照原图、显示尺寸及实际播放，get返回契约；reassess保留历史并撤销错误通过，reason说明原因。技术通过不等于美术通过，未通过不能select_delivery。生图前prompt提交当前Agent优化的绘图说明、实际target_tool及tool_arguments；按返回参数执行，submit提供原request_id、tool_arguments及prompt_sha256，不以提示词展示代替实际传参。默认30分钟租约，长工具可预设lease_seconds并heartbeat续租（不是制作进度）。过期先get查看recovery_contract；reconcile按not_started/checkpoint/running提供原执行证据，不能虚构检查点。同一写入者的真实晚到产物可直接submit；不重复应用或模型调用。",
+      "description": "Codex外部工序：新视觉流程先keyframe美术通过再动画；review须visual_quality对照原图、显示尺寸及实际播放，get返回契约；reassess保留历史并撤销错误通过，reason说明原因。技术通过不等于美术通过，未通过不能select_delivery。生图前prompt提交当前Agent优化的绘图说明、实际target_tool及tool_arguments；原生生图执行prompt回执的host_image_dispatch.javascript，适配器自动回传；其他工具submit提供原request_id、tool_arguments及prompt_sha256，不以提示词展示代替实际传参。默认30分钟租约，长工具可预设lease_seconds并heartbeat续租（不是制作进度）。过期先get查看recovery_contract；reconcile按not_started/checkpoint/running提供原执行证据，不能虚构检查点。同一写入者的真实晚到产物可直接submit；不重复应用或模型调用。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1066,6 +1066,46 @@
           "candidate_id",
           "file",
           "sha256"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "plugin_image_output",
+      "description": "宿主生图适配器自动提交原图分块并绑定原工序。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string"
+          },
+          "step_id": {
+            "type": "string"
+          },
+          "claim_token": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "data": {
+            "type": "string"
+          },
+          "final": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "project_id",
+          "step_id",
+          "claim_token",
+          "request_id",
+          "offset",
+          "data",
+          "final"
         ],
         "additionalProperties": false
       }

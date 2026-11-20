@@ -46,7 +46,7 @@
           {
             "type": "command",
             "command": "powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"${PLUGIN_ROOT}/hooks/Request-Hook.ps1\"",
-            "timeout": 15,
+            "timeout": 45,
             "statusMessage": "映造 · 核对实际工具记录",
             "additionalContextLimit": 2000
           }
@@ -68,12 +68,12 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "mcp__.*yingzao.*",
+        "matcher": "^(mcp__.*yingzao.*|imagegen|image_gen[.]imagegen|image_gen__imagegen)$",
         "hooks": [
           {
             "type": "command",
             "command": "powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"${PLUGIN_ROOT}/hooks/Request-Hook.ps1\"",
-            "timeout": 15,
+            "timeout": 45,
             "statusMessage": "映造正在使用中"
           }
         ]
