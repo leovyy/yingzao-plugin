@@ -790,7 +790,7 @@
     },
     {
       "name": "plugin_workflow",
-      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。失败记录不放行制作；不调用模型。 compose按需求与反馈从现有库选择工序并编译逐作品计划；start通过原编排器启动；advance推进真实回执、自审与局部返工；status只读当前计划和下一工序。",
+      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。失败记录不放行制作；不调用模型。 compose 仅用于宿主项目。plan.deliverables 每项必填 id、name，可选 reference_sha256、canvas、display_size、feedback、sequence；修改指令填在 feedback。内部 API 项目沿 plugin_render 继续。start通过原编排器启动；advance推进真实回执、自审与局部返工；status只读当前计划和下一工序。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1283,7 +1283,7 @@
     },
     {
       "name": "plugin_create",
-      "description": "默认由宿主Agent制作，内部API关闭或未配置不影响正常工具和代码工作。settings.execution_backend=host_session可明确使用宿主；不需要生图时requires_image_generation=false。只有手动选择内部API或确证宿主缺少生图能力才检查内部服务；后者须提供settings.host_image_capability={capability:image_generation,status:unsupported,checked_tools:实际工具列表,observation:实际证据}，仅授权当前任务，不改默认开关。映造统一制作入口，无需connect：内部API关闭时仍登记工作流、审美与参考，交给当前宿主实际执行；开启且配置后才用内部服务。相同request_id只核对原回执，不重发未知请求。与plugin_workflow及plugin_external_step形成准备、执行、回写、自审全链路。",
+      "description": "按用户选择的路径制作。用户指定映造内部 API 时开启设置并使用 configured_api，按回执继续 plugin_render；host_session 和 plugin_external_step 用于宿主工具。不需要生图时requires_image_generation=false。只有手动选择内部API或确证宿主缺少生图能力才检查内部服务；后者须提供settings.host_image_capability={capability:image_generation,status:unsupported,checked_tools:实际工具列表,observation:实际证据}，仅授权当前任务，不改默认开关。映造统一制作入口，无需connect：内部API关闭时仍登记工作流、审美与参考，交给当前宿主实际执行；开启且配置后才用内部服务。相同request_id只核对原回执，不重发未知请求。与plugin_workflow及plugin_external_step形成准备、执行、回写、自审全链路。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1331,7 +1331,14 @@
                   "type": "string"
                 },
                 "role": {
-                  "type": "string"
+                  "type": "string",
+                  "enum": [
+                    "layout",
+                    "style",
+                    "identity",
+                    "target",
+                    "reference"
+                  ]
                 }
               },
               "required": [
