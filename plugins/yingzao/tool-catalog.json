@@ -790,7 +790,7 @@
     },
     {
       "name": "plugin_workflow",
-      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。失败记录不放行制作；不调用模型。 compose 仅用于宿主项目。plan.deliverables 每项必填 id、name，可选 reference_sha256、canvas、display_size、feedback、sequence、visual_brief、editable_canvas、local_only。分别填写主体、构图、光线、题字、约束和焦点/安静材质区域的 visual_brief；修改指令填在 feedback。需要可编辑文字、截图或图层时启用 editable_canvas。只拼接、改字或换本地图时用 local_only=true，无需 host_tools。内部 API 项目沿 plugin_render 继续。start通过原编排器启动；advance推进真实回执、自审与局部返工；status只读当前计划和下一工序。",
+      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。失败记录不放行制作；不调用模型。 图片、海报、小说配图的宿主路线和内部 API 路线均先 compose/start。plan.deliverables 每项必填 id、name，可选 reference_sha256、canvas、display_size、feedback、sequence、visual_brief、editable_canvas、local_only。visual_brief 可省略，填写时使用 subject、composition、light、lettering、constraints 和 regions，文本可用中文。分区填写 name、box、structure、finish、detail，至少各有一个 focal 和 quiet。修改指令填在 feedback。需要可编辑文字、截图或图层时启用 editable_canvas。只拼接、改字或换本地图时用 local_only=true，无需 host_tools。内部 API 的生图节点 claim 后绑定 yingzao.configured_image，再用 plugin_render 提交。start通过原编排器启动；advance推进真实回执、自审与局部返工；status只读当前计划和下一工序。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -844,7 +844,129 @@
             "maximum": 16384
           },
           "plan": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+              "deliverables": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "name"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_-]{0,23}$"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "visual_brief": {
+                      "type": "object",
+                      "properties": {
+                        "subject": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "主体与叙事"
+                        },
+                        "composition": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "镜头与版式"
+                        },
+                        "light": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "光源与色彩"
+                        },
+                        "lettering": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "原样题字，无题字时填“无题字”。"
+                        },
+                        "constraints": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1200,
+                          "description": "硬约束和禁止项"
+                        },
+                        "regions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 600,
+                                "description": "唯一分区名"
+                              },
+                              "box": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "minItems": 4,
+                                "maxItems": 4,
+                                "description": "以原画左上为原点，依次填写 [左, 上, 右, 下]，宽高须大于 0。"
+                              },
+                              "structure": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 600,
+                                "description": "分区内可见的结构"
+                              },
+                              "finish": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 600,
+                                "description": "分区材质和表面表现"
+                              },
+                              "detail": {
+                                "type": "string",
+                                "enum": [
+                                  "focal",
+                                  "support",
+                                  "quiet"
+                                ],
+                                "description": "focal 为焦点，support 为辅助，quiet 为低干扰。"
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "box",
+                              "structure",
+                              "finish",
+                              "detail"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 2,
+                          "maxItems": 8,
+                          "description": "至少包含一个 focal 分区和一个 quiet 分区。"
+                        }
+                      },
+                      "required": [
+                        "subject",
+                        "composition",
+                        "light",
+                        "lettering",
+                        "constraints",
+                        "regions"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+            }
           },
           "requirement": {
             "type": "string"
