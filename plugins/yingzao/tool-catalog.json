@@ -266,15 +266,15 @@
               },
               "use_internal_api": {
                 "type": "boolean",
-                "title": "使用映造内部 API",
-                "description": "仅选择内部模型服务；默认关闭。关闭不影响宿主Agent制作、识别、检索或代码工作。宿主明确缺少所需生图能力时才检查已授权内部服务，不因超时擅自切换。"
+                "title": "使用内部图片服务",
+                "description": "开启后，新生图任务优先使用本机配置的图片 API。关闭时由宿主生图。两条路线共用制作工作台。"
               },
               "image_concurrency": {
                 "type": "integer",
-                "title": "生图并发上限",
+                "title": "同时生图上限",
                 "minimum": 0,
                 "maximum": 64,
-                "description": "0 自动按本机 CPU 和内存推荐，1–64 手动。所有任务共用，新上限从后续派发生效。"
+                "description": "所有项目共用。0 按本机资源自动计算，1–64 手动设置。达到上限的节点等待名额，各作品准备齐备后可独立入队。"
               },
               "desktop_visible": {
                 "type": "boolean",
@@ -349,6 +349,11 @@
                 "type": "string",
                 "title": "看图模型（留空沿用文字模型）",
                 "maxLength": 256
+              },
+              "api_image_stream": {
+                "type": "boolean",
+                "title": "请求生成过程图",
+                "description": "用于支持流式预览的内部图片服务。收到真实过程图时在节点展示，原图归档后再进入自审。"
               },
               "api_relay": {
                 "type": "boolean",
@@ -790,7 +795,7 @@
     },
     {
       "name": "plugin_workflow",
-      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。失败记录不放行制作；不调用模型。 图片、海报、小说配图的宿主路线和内部 API 路线均先 compose/start。plan.deliverables 每项必填 id、name，可选 reference_sha256、canvas、display_size、feedback、sequence、visual_brief、editable_canvas、local_only。visual_brief 可省略，填写时使用 subject、composition、light、lettering、constraints 和 regions，文本可用中文。分区填写 name、box、structure、finish、detail，至少各有一个 focal 和 quiet。修改指令填在 feedback。需要可编辑文字、截图或图层时启用 editable_canvas。只拼接、改字或换本地图时用 local_only=true，无需 host_tools。内部 API 的生图节点 claim 后绑定 yingzao.configured_image，再用 plugin_render 提交。start通过原编排器启动；advance推进真实回执、自审与局部返工；status只读当前计划和下一工序。",
+      "description": "默认制作准备与按阶段指导：prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。失败记录不放行制作；不调用模型。 图片、海报、小说配图的宿主路线和内部 API 路线均先 compose/start。plan.deliverables 每项必填 id、name，可选 reference_sha256、canvas、display_size、feedback、sequence、visual_brief、editable_canvas、local_only。visual_brief 可省略，填写时使用 subject、composition、light、lettering、constraints 和 regions，文本可用中文。分区填写 name、box、structure、finish、detail，至少各有一个 focal 和 quiet。修改指令填在 feedback。需要可编辑文字、截图或图层时启用 editable_canvas。只拼接、改字或换本地图时用 local_only=true，无需 host_tools。内部 API 的生图节点 claim 后绑定 yingzao.configured_image，再用 plugin_render 提交。start通过原编排器启动；advance推进真实回执、自审与局部返工；status只读当前计划和下一工序。 可先 plugin_create 建立任务，再用其 workflow_context_id 直接完成 search、reference_read、reference_bind 和 design。reference_read 返回可续填的 bind_template。reference_read/reference_bind 可用 sources 逐项处理。reference_remove 只移除待绑定记录，reference={reference_id}。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -815,11 +820,13 @@
               "native_repair",
               "optimize_delivery",
               "animate",
-              "refine"
+              "refine",
+              "reference_remove"
             ]
           },
           "reference": {
-            "type": "object"
+            "type": "object",
+            "description": "reference_read 使用 {path, role, purpose} 或 {case_id, role, purpose, source?}。reference_bind 使用 reference_read 返回的 reference_id 和 inspection_sha256，附实际观察。reference_inspect 使用 {reference_id, box}。"
           },
           "stage": {
             "enum": [
@@ -846,6 +853,10 @@
           "plan": {
             "type": "object",
             "properties": {
+              "staged_references": {
+                "type": "boolean",
+                "description": "先登记原图，在同一计划中按每件作品等待各自的参考观察。"
+              },
               "deliverables": {
                 "type": "array",
                 "items": {
@@ -962,6 +973,14 @@
                         "regions"
                       ],
                       "additionalProperties": false
+                    },
+                    "reference_sha256": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      },
+                      "description": "填写本款使用的原图 SHA256。内部 API 项目已登记图片时必填，无参考的作品填空数组。"
                     }
                   }
                 }
@@ -1005,7 +1024,7 @@
     },
     {
       "name": "plugin_external_step",
-      "description": "Codex外部工序：新视觉流程先keyframe美术通过再动画；review须visual_quality对照原图、显示尺寸及实际播放，get返回契约；reassess保留历史并撤销错误通过，reason说明原因。技术通过不等于美术通过，未通过不能select_delivery。生图前prompt提交当前Agent优化的绘图说明、实际target_tool及tool_arguments；原生生图执行prompt回执的host_image_dispatch.javascript，适配器自动回传；其他工具submit提供原request_id、tool_arguments及prompt_sha256，不以提示词展示代替实际传参。默认30分钟租约，长工具可预设lease_seconds并heartbeat续租（不是制作进度）。过期先get查看recovery_contract；reconcile按not_started/checkpoint/running提供原执行证据，不能虚构检查点。同一写入者的真实晚到产物可直接submit；不重复应用或模型调用。",
+      "description": "Codex外部工序：新视觉流程先keyframe美术通过再动画；review须visual_quality对照原图、显示尺寸及实际播放，get返回契约；reassess保留历史并撤销错误通过，reason说明原因。技术通过不等于美术通过，未通过不能select_delivery。生图前prompt提交当前Agent优化的绘图说明、实际target_tool及tool_arguments；原生生图执行prompt回执的host_image_dispatch.javascript，适配器自动回传；其他工具submit提供原request_id、tool_arguments及prompt_sha256，不以提示词展示代替实际传参。默认30分钟租约，长工具可预设lease_seconds并heartbeat续租（不是制作进度）。过期先get查看recovery_contract；reconcile按not_started/checkpoint/running提供原执行证据，不能虚构检查点。同一写入者的真实晚到产物可直接submit；不重复应用或模型调用。 内部 API 的组合生图节点 claim 只需项目、步骤和 owner，默认使用本项目本作品场景。prompt 可省略唯一已声明的 target_tool，默认填入本节点已绑定的参考图。quality 默认沿用服务设置。若派发回执明确为未发送，可在原节点修正后带新 request_id 提交。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1150,6 +1169,10 @@
           },
           "request_id": {
             "type": "string"
+          },
+          "dispatch_now": {
+            "type": "boolean",
+            "description": "已授权的内部生图节点，保存 prompt 后立即后台派发。"
           }
         },
         "required": [
@@ -1218,6 +1241,9 @@
           },
           "final": {
             "type": "boolean"
+          },
+          "source_returned_at": {
+            "type": "number"
           }
         },
         "required": [
