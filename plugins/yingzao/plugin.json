@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "yingzao",
-  "version": "0.7.35",
+  "version": "0.7.36",
   "description": "启用后默认使用映造内部工作流与审美检索；提供内部API、资产过程和桌面丫鸭。",
   "author": {
     "name": "映造"
