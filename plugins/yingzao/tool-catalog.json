@@ -795,7 +795,7 @@
     },
     {
       "name": "plugin_workflow",
-      "description": "默认制作准备与按阶段指导：catalog 列出方法，catalog 配合 query=方法 ID 读取对应指导；prepare 绑定适用指导。prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。失败记录不放行制作；不调用模型。 图片、海报、小说配图的宿主路线和内部 API 路线均先 compose/start。plan.deliverables 每项必填 id、name，可选 reference_sha256、canvas、display_size、feedback、sequence、visual_brief、editable_canvas、local_only。visual_brief 可省略，填写时使用 subject、composition、light、lettering、constraints 和 regions，文本可用中文。分区填写 name、box、structure、finish、detail，至少各有一个 focal 和 quiet。修改指令填在 feedback。需要可编辑文字、截图或图层时启用 editable_canvas。只拼接、改字或换本地图时用 local_only=true，无需 host_tools。内部 API 的生图节点 claim 后绑定 yingzao.configured_image，再用 plugin_render 提交。start通过原编排器启动；advance推进真实回执、自审与局部返工；status只读当前计划和下一工序。 可先 plugin_create 建立任务，再用其 workflow_context_id 直接完成 search、reference_read、reference_bind 和 design。reference_read 返回可续填的 bind_template。reference_read/reference_bind 可用 sources 逐项处理。reference_remove 只移除待绑定记录，reference={reference_id}。",
+      "description": "默认制作准备与按阶段指导：catalog 列出方法，catalog 配合 query=方法 ID 读取对应指导；prepare 绑定适用指导。prepare检索本地审美；guide读取版本化模型/特效方法；audit_script生成待宿主执行的归属场景只读审计代码，生成不代表检查通过。每轮制作必须实际联网search并记录相关来源，不能not_required跳过；称号/Logo的design须含visual_design，记录主题、符号、构图差异、反馈纠偏及web_choices取舍。design 在 plan 中传 intent、choices、preserve、avoid，可附 visual_design；不要混入 compose 字段。cancel 停止原流程后续步骤并保留回执。失败记录不放行制作；不调用模型。 图片、海报、小说配图的宿主路线和内部 API 路线均先 compose/start。plan.deliverables 每项必填 id、name，可选 reference_sha256、canvas、display_size、feedback、sequence、visual_brief、editable_canvas、local_only。visual_brief 可省略，填写时使用 subject、composition、light、lettering、constraints 和 regions，文本可用中文。分区填写 name、box、structure、finish、detail，至少各有一个 focal 和 quiet。修改指令填在 feedback。需要可编辑文字、截图或图层时启用 editable_canvas。只拼接、改字或换本地图时用 local_only=true，无需 host_tools。内部 API 的生图节点 claim 后绑定 yingzao.configured_image，再用 plugin_render 提交。start通过原编排器启动；advance推进真实回执、自审与局部返工；status只读当前计划和下一工序。 可先 plugin_create 建立任务，再用其 workflow_context_id 直接完成 search、reference_read、reference_bind 和 design。reference_read 返回可续填的 bind_template。reference_read/reference_bind 可用 sources 逐项处理。reference_remove 只移除待绑定记录，reference={reference_id}。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -815,6 +815,7 @@
               "start",
               "advance",
               "status",
+              "cancel",
               "catalog",
               "diagnose",
               "native_repair",
@@ -853,6 +854,76 @@
           "plan": {
             "type": "object",
             "properties": {
+              "intent": {
+                "type": "string",
+                "description": "design：本轮设计意图。"
+              },
+              "choices": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "source",
+                    "case_id",
+                    "feature",
+                    "use",
+                    "reason"
+                  ],
+                  "properties": {
+                    "source": {
+                      "type": "string"
+                    },
+                    "case_id": {
+                      "type": "string"
+                    },
+                    "feature": {
+                      "type": "string"
+                    },
+                    "use": {
+                      "type": "boolean"
+                    },
+                    "reason": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "description": "design：本轮审美命中的采用或放弃，没有采用案例时填写空数组。"
+              },
+              "preserve": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "design：保留项。"
+              },
+              "avoid": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "design：避免项。"
+              },
+              "visual_design": {
+                "type": "object",
+                "description": "design：称号和 Logo 所需的视觉设计与联网取舍。"
+              },
+              "host_tools": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "compose：宿主实际可执行的生图工具。"
+              },
+              "feedback": {
+                "type": "string",
+                "description": "compose：共用反馈。"
+              },
+              "max_reworks": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 5,
+                "description": "compose：最大返工次数。"
+              },
               "staged_references": {
                 "type": "boolean",
                 "description": "先登记原图，在同一计划中按每件作品等待各自的参考观察。"
