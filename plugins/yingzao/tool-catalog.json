@@ -3,7 +3,7 @@
   "tools": [
     {
       "name": "plugin_settings_read",
-      "description": "读取映造原生插件设置与本机 API 管理入口；不读取密钥、不联网。",
+      "description": "读取映造原生插件设置与完整设置页入口；不读取密钥、不联网。",
       "inputSchema": {
         "type": "object",
         "properties": {},
@@ -40,6 +40,23 @@
       },
       "annotations": {
         "readOnlyHint": true
+      }
+    },
+    {
+      "name": "plugin_settings_open",
+      "description": "打开映造完整设置页",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "_meta": {
+        "ui": {
+          "visibility": [
+            "app"
+          ]
+        }
       }
     },
     {
@@ -113,8 +130,7 @@
         "ui": {
           "visibility": [
             "app"
-          ],
-          "resourceUri": "ui://yingzao/settings-api.html"
+          ]
         }
       },
       "title": "连接、加密密钥与 3D 服务"
@@ -132,8 +148,7 @@
         "ui": {
           "visibility": [
             "app"
-          ],
-          "resourceUri": "ui://yingzao/settings-aesthetics.html"
+          ]
         }
       },
       "title": "审美库"
@@ -151,8 +166,7 @@
         "ui": {
           "visibility": [
             "app"
-          ],
-          "resourceUri": "ui://yingzao/settings-memory.html"
+          ]
         }
       },
       "title": "工作记忆"
@@ -170,8 +184,7 @@
         "ui": {
           "visibility": [
             "app"
-          ],
-          "resourceUri": "ui://yingzao/settings-storage.html"
+          ]
         }
       },
       "title": "本地资料与更新"
@@ -189,8 +202,7 @@
         "ui": {
           "visibility": [
             "app"
-          ],
-          "resourceUri": "ui://yingzao/settings-workflows.html"
+          ]
         }
       },
       "title": "工作流库"
@@ -214,7 +226,7 @@
     },
     {
       "name": "plugin_api_preferences",
-      "description": "设置弹窗的非密钥服务配置；密钥只在用户点击后打开的本机表单输入，不自动调用模型。",
+      "description": "非密钥服务配置；密钥只在本机设置页输入，不自动调用模型。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -443,7 +455,7 @@
     },
     {
       "name": "plugin_open",
-      "description": "打开审美库与集中管理，含图片偏好、记忆、安全API配置、本地资料与更新；宿主支持时内嵌显示，否则独立本机页面。记忆不在工作台展示；不调用模型。",
+      "description": "打开映造本机完整设置页，管理审美库、工作流、记忆、密钥及本地资料；不调用模型。",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -454,12 +466,7 @@
         "required": [],
         "additionalProperties": false
       },
-      "title": "映造工作记忆",
-      "_meta": {
-        "ui": {
-          "resourceUri": "ui://yingzao/plugin.html"
-        }
-      }
+      "title": "打开映造设置"
     },
     {
       "name": "plugin_aesthetics",
@@ -674,6 +681,7 @@
             "enum": [
               "list",
               "recall",
+              "browse",
               "remember",
               "update",
               "forget",
@@ -691,6 +699,13 @@
           "offset": {
             "type": "integer",
             "minimum": 0
+          },
+          "work_offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "all_projects": {
+            "type": "boolean"
           },
           "ident": {
             "type": "string"
